@@ -4,7 +4,7 @@ import { User } from '@/components/common/User'
 import Providers from '@/components/common/Providers'
 import { SearchInput } from '@/components/common/SearchInput'
 import { DesktopNav } from '@/components/common/DesktopNav'
-import { DashboardBreadcrumb } from '@/components/common/Breadcrumb'
+import { DashboardBreadcrumb } from '@/components/common/DashboardBreadcrumb'
 
 export const metadata = {
   title: 'Delivery Docket App',
