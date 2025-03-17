@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button'
 // import { auth, signOut } from '@/lib/auth';
-import Image from 'next/image';
+import Image from 'next/image'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,13 +8,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import Link from 'next/link';
+} from '@/components/ui/dropdown-menu'
+import Link from 'next/link'
 
 export async function User() {
   // let session = await auth();
   // let user = session?.user;
-  const user: any = null;
+  const user: any = null
 
   return (
     <DropdownMenu>
@@ -43,7 +43,7 @@ export async function User() {
           <DropdownMenuItem>
             <form
               action={async () => {
-                'use server';
+                'use server'
                 // await signOut();
               }}
             >
@@ -57,5 +57,5 @@ export async function User() {
         )}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

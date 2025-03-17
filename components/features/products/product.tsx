@@ -1,15 +1,15 @@
-import Image from 'next/image';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import Image from 'next/image'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { MoreHorizontal } from 'lucide-react';
-import { TableCell, TableRow } from '@/components/ui/table';
+} from '@/components/ui/dropdown-menu'
+import { MoreHorizontal } from 'lucide-react'
+import { TableCell, TableRow } from '@/components/ui/table'
 
 export function Product({ product }: { product: any }) {
   return (
@@ -54,5 +54,5 @@ export function Product({ product }: { product: any }) {
         </DropdownMenu>
       </TableCell>
     </TableRow>
-  );
+  )
 }

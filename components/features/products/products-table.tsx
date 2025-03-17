@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
   TableHead,
@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableBody,
   Table
-} from '@/components/ui/table';
+} from '@/components/ui/table'
 import {
   Card,
   CardContent,
@@ -14,31 +14,31 @@ import {
   CardFooter,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Product } from './product';
+} from '@/components/ui/card'
+import { Product } from './product'
 // import { SelectProduct } from '@/lib/db';
-import { useRouter } from 'next/navigation';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export function ProductsTable({
   products,
   offset,
   totalProducts
 }: {
-  products: any[];
-  offset: number;
-  totalProducts: number;
+  products: any[]
+  offset: number
+  totalProducts: number
 }) {
-  let router = useRouter();
-  let productsPerPage = 5;
+  let router = useRouter()
+  let productsPerPage = 5
 
   function prevPage() {
-    router.back();
+    router.back()
   }
 
   function nextPage() {
-    router.push(`/?offset=${offset}`, { scroll: false });
+    router.push(`/?offset=${offset}`, { scroll: false })
   }
 
   return (
@@ -113,5 +113,5 @@ export function ProductsTable({
         </form>
       </CardFooter>
     </Card>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import './globals.css';
-import Link from 'next/link';
+import './globals.css'
+import Link from 'next/link'
 import {
   Home,
   LineChart,
@@ -9,7 +9,7 @@ import {
   Settings,
   ShoppingCart,
   Users2
-} from 'lucide-react';
+} from 'lucide-react'
 
 import {
   Breadcrumb,
@@ -18,30 +18,30 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+} from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
-} from '@/components/ui/tooltip';
-import { Analytics } from '@vercel/analytics/react';
-import { User } from '@/components/common/User';
-import { VercelLogo } from '@/components/icons';
-import Providers from '@/components/common/Providers';
-import { NavItem } from '../components/common/NavItem';
-import { SearchInput } from '@/components/common/SearchInput';
+} from '@/components/ui/tooltip'
+import { Analytics } from '@vercel/analytics/react'
+import { User } from '@/components/common/User'
+import { VercelLogo } from '@/components/icons'
+import Providers from '@/components/common/Providers'
+import { NavItem } from '../components/common/NavItem'
+import { SearchInput } from '@/components/common/SearchInput'
 
 export const metadata = {
   title: 'Delivery Docket App',
   description: 'Manage delivery dockets'
-};
+}
 
 export default function RootLayout({
   children
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang='en'>
@@ -65,7 +65,7 @@ export default function RootLayout({
         </Providers>
       </body>
     </html>
-  );
+  )
 }
 
 function DesktopNav() {
@@ -116,7 +116,7 @@ function DesktopNav() {
         </Tooltip>
       </nav>
     </aside>
-  );
+  )
 }
 
 function MobileNav() {
@@ -175,7 +175,7 @@ function MobileNav() {
         </nav>
       </SheetContent>
     </Sheet>
-  );
+  )
 }
 
 function DashboardBreadcrumb() {
@@ -199,5 +199,5 @@ function DashboardBreadcrumb() {
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
-  );
+  )
 }

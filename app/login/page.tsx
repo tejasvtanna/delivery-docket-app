@@ -1,11 +1,11 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
+} from '@/components/ui/card'
 // import { signIn } from '@/lib/auth';
 
 export default function LoginPage() {
@@ -21,7 +21,7 @@ export default function LoginPage() {
         <CardFooter>
           <form
             action={async () => {
-              'use server';
+              'use server'
               // await signIn('github', {
               //   redirectTo: '/'
               // });
@@ -33,5 +33,5 @@ export default function LoginPage() {
         </CardFooter>
       </Card>
     </div>
-  );
+  )
 }
