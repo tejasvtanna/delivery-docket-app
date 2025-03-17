@@ -5,6 +5,7 @@ import Providers from '@/components/common/Providers'
 import { SearchInput } from '@/components/common/SearchInput'
 import { DesktopNav } from '@/components/common/DesktopNav'
 import { DashboardBreadcrumb } from '@/components/common/DashboardBreadcrumb'
+import { Toaster } from '@/components/ui/sonner'
 
 export const metadata = {
   title: 'Delivery Docket App',
@@ -31,6 +32,7 @@ export default function RootLayout({
               </header>
               <main className='grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4 bg-muted/40'>
                 {children}
+                <Toaster />
               </main>
             </div>
             <Analytics />

@@ -12,3 +12,22 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Product {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  basePrice   Float?        // Optional default price
+  prices      ProductPrice[] // Customer-specific prices
+  createdAt   DateTime      @default(now())
+}
+
+model ProductPrice {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  customerId String   // ID from Xero API
+  price      Float
+  product    Product  @relation(fields: [productId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@unique([productId, customerId]) // One price per product-customer pair
+}

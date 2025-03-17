@@ -1,43 +1,61 @@
-import React from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { File, PlusCircle } from 'lucide-react'
+import { getProducts, deleteProduct } from '@/actions/product.actions'
 import { Button } from '@/components/ui/button'
-import { ProductsTable } from '@/components/features/products/ProductsTable'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
+import { Trash } from 'lucide-react' // Icons (npm install lucide-react)
+import { ProductEditForm } from '@/components/features/products/ProductEditForm'
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const products = await getProducts()
+
   return (
-    <Tabs defaultValue='all'>
-      <div className='flex items-center'>
-        <TabsList>
-          <TabsTrigger value='all'>All</TabsTrigger>
-          <TabsTrigger value='active'>Active</TabsTrigger>
-          <TabsTrigger value='draft'>Draft</TabsTrigger>
-          <TabsTrigger value='archived' className='hidden sm:flex'>
-            Archived
-          </TabsTrigger>
-        </TabsList>
-        <div className='ml-auto flex items-center gap-2'>
-          <Button size='sm' variant='outline' className='h-8 gap-1'>
-            <File className='h-3.5 w-3.5' />
-            <span className='sr-only sm:not-sr-only sm:whitespace-nowrap'>
-              Export
-            </span>
-          </Button>
-          <Button size='sm' className='h-8 gap-1'>
-            <PlusCircle className='h-3.5 w-3.5' />
-            <span className='sr-only sm:not-sr-only sm:whitespace-nowrap'>
-              Add Product
-            </span>
-          </Button>
-        </div>
+    <div className='container mx-auto py-10'>
+      <div className='flex justify-between items-center mb-5'>
+        <h1 className='text-2xl font-bold'>Products</h1>
+        <ProductEditForm />
       </div>
-      <TabsContent value='all'>
-        {/* <ProductsTable
-          products={products}
-          offset={newOffset ?? 0}
-          totalProducts={totalProducts}
-        /> */}
-      </TabsContent>
-    </Tabs>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Product Name</TableHead>
+            <TableHead>Base Price</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {products.map((product) => (
+            <TableRow key={product.id}>
+              <TableCell>{product.name}</TableCell>
+              <TableCell>
+                {product.basePrice ? `$${product.basePrice}` : 'N/A'}
+              </TableCell>
+              <TableCell>
+                <div className='flex gap-2'>
+                  <ProductEditForm product={product} />
+                  <form
+                    action={async () => {
+                      'use server'
+                      await deleteProduct(product.id)
+                    }}
+                  >
+                    <Button variant='ghost' size='icon' type='submit'>
+                      <Trash className='h-4 w-4' />
+                    </Button>
+                  </form>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   )
 }
