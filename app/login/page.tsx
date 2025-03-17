@@ -6,14 +6,14 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { signIn } from '@/lib/auth';
+// import { signIn } from '@/lib/auth';
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex justify-center items-start md:items-center p-8">
-      <Card className="w-full max-w-sm">
+    <div className='min-h-screen flex justify-center items-start md:items-center p-8'>
+      <Card className='w-full max-w-sm'>
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className='text-2xl'>Login</CardTitle>
           <CardDescription>
             This demo uses GitHub for authentication.
           </CardDescription>
@@ -22,13 +22,13 @@ export default function LoginPage() {
           <form
             action={async () => {
               'use server';
-              await signIn('github', {
-                redirectTo: '/'
-              });
+              // await signIn('github', {
+              //   redirectTo: '/'
+              // });
             }}
-            className="w-full"
+            className='w-full'
           >
-            <Button className="w-full">Sign in with GitHub</Button>
+            <Button className='w-full'>Sign in with GitHub</Button>
           </form>
         </CardFooter>
       </Card>

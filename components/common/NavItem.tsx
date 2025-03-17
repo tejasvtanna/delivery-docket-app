@@ -33,10 +33,10 @@ export function NavItem({
           )}
         >
           {children}
-          <span className="sr-only">{label}</span>
+          <span className='sr-only'>{label}</span>
         </Link>
       </TooltipTrigger>
-      <TooltipContent side="right">{label}</TooltipContent>
+      <TooltipContent side='right'>{label}</TooltipContent>
     </Tooltip>
   );
 }
