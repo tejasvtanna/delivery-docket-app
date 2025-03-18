@@ -1,5 +1,4 @@
-import { getProducts, deleteProduct } from '@/actions/product.actions'
-import { Button } from '@/components/ui/button'
+import { getProducts } from '@/actions/product.actions'
 import {
   Table,
   TableBody,
@@ -8,8 +7,8 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
-import { Trash } from 'lucide-react' // Icons (npm install lucide-react)
 import { ProductEditForm } from '@/components/features/products/ProductEditForm'
+import { ProductDeleteConfirmation } from '@/components/features/products/ProductDeleteConfirmation'
 
 export default async function ProductsPage() {
   const products = await getProducts()
@@ -40,16 +39,7 @@ export default async function ProductsPage() {
               <TableCell>
                 <div className='flex gap-2'>
                   <ProductEditForm product={product} />
-                  <form
-                    action={async () => {
-                      'use server'
-                      await deleteProduct(product.id)
-                    }}
-                  >
-                    <Button variant='ghost' size='icon' type='submit'>
-                      <Trash className='h-4 w-4' />
-                    </Button>
-                  </form>
+                  <ProductDeleteConfirmation product={product} />
                 </div>
               </TableCell>
             </TableRow>

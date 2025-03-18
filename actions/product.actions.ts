@@ -61,9 +61,10 @@ export async function updateProduct(id: number, data: ProductFormData) {
 export async function deleteProduct(id: number) {
   try {
     await prisma.product.delete({ where: { id } })
+    revalidatePath('/products')
+    return { success: true }
   } catch (error) {
     console.error('deleteProduct error', error)
     throw error
   }
-  revalidatePath('/products')
 }
