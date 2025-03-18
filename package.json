@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack -p 3333",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "format": "prettier --write \"**/*.{js,ts,tsx,jsx,json,css,md}\"",
     "seed": "node prisma/seed.ts"
