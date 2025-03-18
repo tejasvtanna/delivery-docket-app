@@ -24,8 +24,8 @@ export default async function ProductsPage() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Product Name</TableHead>
-            <TableHead>Base Price</TableHead>
+            <TableHead className='w-[50%]'>Product Name</TableHead>
+            <TableHead className='w-[45%]'>Base Price</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
