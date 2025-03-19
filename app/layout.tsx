@@ -5,6 +5,7 @@ import Providers from '@/components/common/Providers'
 import { SearchInput } from '@/components/common/SearchInput'
 import { DesktopNav } from '@/components/common/DesktopNav'
 import { DashboardBreadcrumb } from '@/components/common/DashboardBreadcrumb'
+import { inter } from '@/lib/fonts'
 
 export const metadata = {
   title: 'Delivery Docket App',
@@ -18,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body className='flex min-h-screen w-full flex-col'>
+      <body className={`${inter.className} flex min-h-screen w-full flex-col`}>
         <Providers>
           <main className='flex min-h-screen w-full flex-col bg-muted/40'>
             <DesktopNav />
