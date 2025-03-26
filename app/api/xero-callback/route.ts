@@ -23,6 +23,12 @@ export async function GET(request: Request) {
 
     await saveTokenSet(tokenSet)
 
+    // Optional: Invalidate cache on new tokens
+    // if (typeof window !== 'undefined') {
+    //   const { queryClient } = require('@tanstack/react-query')
+    //   queryClient.invalidateQueries(['xero-customers'])
+    // }
+
     return NextResponse.redirect('http://localhost:3333/customers') // Adjust for prod
   } catch (error) {
     console.error('Xero OAuth Callback Error:', error)

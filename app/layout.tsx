@@ -35,7 +35,7 @@ export default function RootLayout({
                 {children}
               </main>
             </div>
-            <Analytics />
+            {/* <Analytics /> */}
           </main>
         </Providers>
       </body>
