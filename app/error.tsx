@@ -2,45 +2,35 @@
 
 import { useEffect } from 'react'
 
-export default function Error({
-  error,
-  reset
-}: {
+interface ErrorProps {
   error: Error & { digest?: string }
   reset: () => void
-}) {
+}
+
+export default function Error({ error, reset }: ErrorProps) {
   useEffect(() => {
     // Log the error to an error reporting service
     console.error(error)
   }, [error])
 
   return (
-    <main className='p-4 md:p-6'>
-      <div className='mb-8 space-y-4'>
-        <h1 className='font-semibold text-lg md:text-2xl'>
-          Please complete setup
-        </h1>
-        <p>
-          Inside the Vercel Postgres dashboard, create a table based on the
-          schema defined in this repository.
+    <div className='min-h-screen flex items-center justify-center bg-gray-100'>
+      <div className='max-w-md w-full space-y-8 p-6 bg-white rounded-lg shadow-md'>
+        <h2 className='text-2xl font-bold text-center text-gray-900'>
+          Something went wrong!
+        </h2>
+        <p className='text-center text-gray-600'>
+          {error.message || 'An unexpected error occurred'}
         </p>
-        <pre className='my-4 px-3 py-4 bg-black text-white rounded-lg max-w-2xl overflow-scroll flex text-wrap'>
-          <code>
-            {`CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  email VARCHAR(255) NOT NULL,
-  name VARCHAR(255),
-  username VARCHAR(255)
-);`}
-          </code>
-        </pre>
-        <p>Insert a row for testing:</p>
-        <pre className='my-4 px-3 py-4 bg-black text-white rounded-lg max-w-2xl overflow-scroll flex text-wrap'>
-          <code>
-            {`INSERT INTO users (id, email, name, username) VALUES (1, 'me@site.com', 'Me', 'username');`}
-          </code>
-        </pre>
+        <div className='flex justify-center'>
+          <button
+            onClick={() => reset()}
+            className='px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+          >
+            Try again
+          </button>
+        </div>
       </div>
-    </main>
+    </div>
   )
 }

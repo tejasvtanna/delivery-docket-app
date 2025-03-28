@@ -1,117 +1,83 @@
 'use client'
 
+import { useState } from 'react'
 import {
-  TableHead,
-  TableRow,
-  TableHeader,
+  Table,
   TableBody,
-  Table
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from '@/components/ui/table'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
-import { Product } from './product'
-// import { SelectProduct } from '@/lib/db';
-import { useRouter } from 'next/navigation'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Product, ProductPrice } from '@prisma/client'
+import { ProductModal } from './ProductModal'
+import { ProductDeleteConfirmation } from './ProductDeleteConfirmation'
 import { Button } from '@/components/ui/button'
+import { Pencil } from 'lucide-react'
 
-export function ProductsTable({
-  products,
-  offset,
-  totalProducts
-}: {
-  products: any[]
-  offset: number
-  totalProducts: number
-}) {
-  let router = useRouter()
-  let productsPerPage = 5
+interface Props {
+  products: (Product & { prices: ProductPrice[] })[]
+}
 
-  function prevPage() {
-    router.back()
-  }
+export function ProductsTable({ products }: Props) {
+  const [isAdding, setIsAdding] = useState(false)
+  const [editingProduct, setEditingProduct] = useState<
+    (Product & { prices: ProductPrice[] }) | null
+  >(null)
 
-  function nextPage() {
-    router.push(`/?offset=${offset}`, { scroll: false })
-  }
+  console.debug({ isAdding, editingProduct })
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Products</CardTitle>
-        <CardDescription>
-          Manage your products and view their sales performance.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <>
+      <div className='w-full'>
+        <div className='flex justify-between items-center mb-5'>
+          <h1 className='text-2xl font-bold'>Products</h1>
+          <Button onClick={() => setIsAdding(true)}>Add Product</Button>
+        </div>
+
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className='hidden w-[100px] sm:table-cell'>
-                <span className='sr-only'>Image</span>
-              </TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className='hidden md:table-cell'>Price</TableHead>
-              <TableHead className='hidden md:table-cell'>
-                Total Sales
-              </TableHead>
-              <TableHead className='hidden md:table-cell'>Created at</TableHead>
-              <TableHead>
-                <span className='sr-only'>Actions</span>
-              </TableHead>
+              <TableHead className='w-[50%]'>Product Name</TableHead>
+              <TableHead className='w-[45%]'>Base Price</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {products.map((product) => (
-              <Product key={product.id} product={product} />
+              <TableRow key={product.id}>
+                <TableCell>{product.name}</TableCell>
+                <TableCell>
+                  {product.basePrice ? `$${product.basePrice}` : 'N/A'}
+                </TableCell>
+                <TableCell>
+                  <div className='flex gap-2'>
+                    <Button
+                      variant='ghost'
+                      size='icon'
+                      onClick={() => setEditingProduct(product)}
+                    >
+                      <Pencil className='h-4 w-4' />
+                    </Button>
+                    <ProductDeleteConfirmation product={product} />
+                  </div>
+                </TableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
-      </CardContent>
-      <CardFooter>
-        <form className='flex items-center w-full justify-between'>
-          <div className='text-xs text-muted-foreground'>
-            Showing{' '}
-            <strong>
-              {Math.max(
-                0,
-                Math.min(offset - productsPerPage, totalProducts) + 1
-              )}
-              -{offset}
-            </strong>{' '}
-            of <strong>{totalProducts}</strong> products
-          </div>
-          <div className='flex'>
-            <Button
-              formAction={prevPage}
-              variant='ghost'
-              size='sm'
-              type='submit'
-              disabled={offset === productsPerPage}
-            >
-              <ChevronLeft className='mr-2 h-4 w-4' />
-              Prev
-            </Button>
-            <Button
-              formAction={nextPage}
-              variant='ghost'
-              size='sm'
-              type='submit'
-              disabled={offset + productsPerPage > totalProducts}
-            >
-              Next
-              <ChevronRight className='ml-2 h-4 w-4' />
-            </Button>
-          </div>
-        </form>
-      </CardFooter>
-    </Card>
+      </div>
+
+      {/* Add Product Modal */}
+      {isAdding && <ProductModal onClose={() => setIsAdding(false)} />}
+
+      {/* Edit Product Modal */}
+      {editingProduct && (
+        <ProductModal
+          product={editingProduct}
+          onClose={() => setEditingProduct(null)}
+        />
+      )}
+    </>
   )
 }

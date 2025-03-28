@@ -21,6 +21,7 @@ export const CustomersTable = () => {
     <Table>
       <TableHeader>
         <TableRow>
+          <TableHead>ID</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Status</TableHead>
@@ -30,6 +31,7 @@ export const CustomersTable = () => {
         {customers.length > 0 ? (
           customers.map((customer) => (
             <TableRow key={customer.contactID}>
+              <TableCell>{customer.contactID}</TableCell>
               <TableCell>{customer.name}</TableCell>
               <TableCell>{customer.emailAddress}</TableCell>
               <TableCell>{customer.contactStatus}</TableCell>

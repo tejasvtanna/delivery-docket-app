@@ -3,31 +3,21 @@
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { Product, ProductPrice } from '@prisma/client'
-import { ProductFormData } from '@/schemas/product.schemas' // Updated import
+import { ProductFormData } from '@/schemas/product.schemas'
 
-export async function getProducts(): Promise<
-  (Product & { prices: ProductPrice[] })[]
-> {
+export async function getProducts(): Promise<Product[]> {
   return await prisma.product.findMany({
-    include: { prices: true }
+    include: { prices: false }
   })
 }
 
-export async function createProduct(data: ProductFormData) {
-  const { name, basePrice, prices } = data
+export async function createProduct(data: Omit<ProductFormData, 'prices'>) {
+  const { name, basePrice } = data
 
   const product = await prisma.product.create({
     data: {
       name,
-      basePrice: basePrice ?? null,
-      prices: {
-        create: Object.entries(prices)
-          .filter(([, price]) => price !== undefined)
-          .map(([customerId, price]) => ({
-            customerId,
-            price: price!
-          }))
-      }
+      basePrice: basePrice ?? null
     }
   })
 
@@ -36,26 +26,41 @@ export async function createProduct(data: ProductFormData) {
 }
 
 export async function updateProduct(id: number, data: ProductFormData) {
-  const { name, basePrice, prices } = data
-
-  await prisma.$transaction([
-    prisma.product.update({
-      where: { id },
-      data: { name, basePrice: basePrice ?? null }
-    }),
-    prisma.productPrice.deleteMany({ where: { productId: id } }),
-    prisma.productPrice.createMany({
-      data: Object.entries(prices)
-        .filter(([, price]) => price !== undefined)
-        .map(([customerId, price]) => ({
-          productId: id,
-          customerId,
-          price: price!
-        }))
-    })
-  ])
+  const product = prisma.product.update({
+    where: { id },
+    data: {
+      name: data.name,
+      basePrice: data.basePrice,
+      prices: {
+        update: Object.entries(data.prices || {}).map(
+          ([customerId, price]) => ({
+            where: { productId_customerId: { productId: id, customerId } },
+            data: { price }
+          })
+        )
+      }
+    }
+  })
 
   revalidatePath('/products')
+  return product
+}
+
+export async function addPriceOverride(
+  productId: number,
+  customerId: string,
+  price: number
+) {
+  const overridePrice = await prisma.productPrice.create({
+    data: {
+      productId,
+      customerId,
+      price
+    }
+  })
+
+  revalidatePath('/products')
+  return overridePrice
 }
 
 export async function deleteProduct(id: number) {
@@ -67,4 +72,12 @@ export async function deleteProduct(id: number) {
     console.error('deleteProduct error', error)
     throw error
   }
+}
+
+export async function getProductPrices(
+  productId: number
+): Promise<ProductPrice[]> {
+  return prisma.productPrice.findMany({
+    where: { productId }
+  })
 }

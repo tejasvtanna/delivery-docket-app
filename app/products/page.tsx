@@ -7,17 +7,29 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
-import { ProductEditForm } from '@/components/features/products/ProductEditForm'
+import { ProductModal } from '@/components/features/products/ProductModal'
 import { ProductDeleteConfirmation } from '@/components/features/products/ProductDeleteConfirmation'
+import { XeroProvider } from '@/components/features/xero/XeroProvider'
+import { ProductsTable } from '@/components/features/products/ProductsTable'
 
 export default async function ProductsPage() {
   const products = await getProducts()
 
   return (
+    <XeroProvider>
+      <div className='container mx-auto py-10'>
+        <div className='flex justify-between items-center mb-5'>
+          <ProductsTable products={products} />
+        </div>
+      </div>
+    </XeroProvider>
+  )
+
+  return (
     <div className='container mx-auto py-10'>
       <div className='flex justify-between items-center mb-5'>
         <h1 className='text-2xl font-bold'>Products</h1>
-        <ProductEditForm />
+        <ProductModal />
       </div>
 
       <Table>
@@ -38,7 +50,7 @@ export default async function ProductsPage() {
               </TableCell>
               <TableCell>
                 <div className='flex gap-2'>
-                  <ProductEditForm product={product} />
+                  <ProductModal product={product} />
                   <ProductDeleteConfirmation product={product} />
                 </div>
               </TableCell>
