@@ -1,10 +1,10 @@
 import React from 'react'
 
-interface SpinnerProps {
+interface Props {
   size: 'small' | 'medium' | 'large'
 }
 
-export const Spinner: React.FC<SpinnerProps> = ({ size }) => {
+export function Spinner({ size }: Props) {
   const sizeMap = {
     small: 14,
     medium: 24,

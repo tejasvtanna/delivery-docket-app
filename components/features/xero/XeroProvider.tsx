@@ -10,7 +10,7 @@ interface Props {
   children: ReactNode
 }
 
-export const XeroProvider: React.FC<Props> = ({ children }) => {
+export function XeroProvider({ children }: Props) {
   const {
     data: customers,
     error,

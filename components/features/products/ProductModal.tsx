@@ -41,7 +41,7 @@ interface Props {
   onClose?: () => void
 }
 
-export const ProductModal: React.FC<Props> = ({ product, onClose }) => {
+export function ProductModal({ product, onClose }: Props) {
   const [isOverrideOpen, setIsOverrideOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
 

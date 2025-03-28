@@ -21,7 +21,7 @@ interface Props {
   product: Product
 }
 
-export const ProductDeleteConfirmation: React.FC<Props> = ({ product }) => {
+export function ProductDeleteConfirmation({ product }: Props) {
   const [isOpen, setIsOpen] = React.useState(false)
   const [isPending, startTransition] = useTransition()
 
