@@ -16,16 +16,14 @@ import { Button } from '@/components/ui/button'
 import { Pencil } from 'lucide-react'
 
 interface Props {
-  products: (Product & { prices: ProductPrice[] })[]
+  products: Product[]
 }
 
 export function ProductsTable({ products }: Props) {
   const [isAdding, setIsAdding] = useState(false)
-  const [editingProduct, setEditingProduct] = useState<
-    (Product & { prices: ProductPrice[] }) | null
-  >(null)
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
 
-  console.debug({ isAdding, editingProduct })
+  // console.debug({ isAdding, editingProduct })
 
   return (
     <>
