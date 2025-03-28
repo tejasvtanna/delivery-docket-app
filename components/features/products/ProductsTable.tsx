@@ -13,7 +13,12 @@ import { Product, ProductPrice } from '@prisma/client'
 import { ProductModal } from './ProductModal'
 import { ProductDeleteConfirmation } from './ProductDeleteConfirmation'
 import { Button } from '@/components/ui/button'
-import { Pencil } from 'lucide-react'
+import { Link, Pencil } from 'lucide-react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@radix-ui/react-tooltip'
 
 interface Props {
   products: Product[]
@@ -50,13 +55,20 @@ export function ProductsTable({ products }: Props) {
                 </TableCell>
                 <TableCell>
                   <div className='flex gap-2'>
-                    <Button
-                      variant='ghost'
-                      size='icon'
-                      onClick={() => setEditingProduct(product)}
-                    >
-                      <Pencil className='h-4 w-4' />
-                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant='ghost'
+                          size='icon'
+                          onClick={() => setEditingProduct(product)}
+                        >
+                          <Pencil className='h-4 w-4' />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side='right'>
+                        Edit product or override prices
+                      </TooltipContent>
+                    </Tooltip>
                     <ProductDeleteConfirmation product={product} />
                   </div>
                 </TableCell>
