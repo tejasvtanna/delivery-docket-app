@@ -14,20 +14,49 @@ datasource db {
 }
 
 model Product {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique
-  basePrice   Float?        // Optional default price
-  prices      ProductPrice[] // Customer-specific prices
-  createdAt   DateTime      @default(now())
+  id        Int            @id @default(autoincrement())
+  name      String         @unique
+  basePrice Float? // Optional default price
+  prices    ProductPrice[] // Customer-specific prices
+  dockets   Docket[]
+
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt @default(now())
 }
 
 model ProductPrice {
   id         Int      @id @default(autoincrement())
   productId  Int
-  customerId String   // ID from Xero API
+  customerId String // ID from Xero API
   price      Float
   product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
   createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt @default(now())
 
   @@unique([productId, customerId]) // One price per product-customer pair
+}
+
+model Docket {
+  id              Int      @id @default(autoincrement())
+  date            DateTime // Date field
+  driverRegNumber String?
+  customerId      String
+  productId       Int
+  orderNumber     String
+  docketNumber    String
+  deliveryAddress String?
+  inspectedBy     String?
+  deliveredBy     String?
+  firstWeight     Float?
+  secondWeight    Float?
+  thirdWeight     Float?
+  receivedBy      String?
+  price           Float
+  status          Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
 }

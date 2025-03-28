@@ -3,7 +3,7 @@
 import { useState, useEffect, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   createProduct,
   getProductPrices,
@@ -37,11 +37,12 @@ import { PriceOverrideModal } from './PriceOverrideModal'
 import { Spinner } from '@/components/common/Spinner'
 
 interface Props {
-  product?: Product
+  product?: Product & { prices: ProductPrice[] }
   onClose?: () => void
 }
 
 export function ProductModal({ product, onClose }: Props) {
+  const queryClient = useQueryClient()
   const [isOverrideOpen, setIsOverrideOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
 
@@ -53,10 +54,10 @@ export function ProductModal({ product, onClose }: Props) {
   const { data: prices = [], isLoading: isLoadingPrices } = useQuery<
     ProductPrice[]
   >({
-    queryKey: ['product-prices', product?.id],
+    queryKey: ['override-prices', product?.id],
     queryFn: () => getProductPrices(product!.id),
-    enabled: !!product?.id
-    // initialData: product?.prices // Use prop as initial data
+    enabled: !!product?.id,
+    initialData: product?.prices // Use prop as initial data
   })
 
   const overrideCustomers = product
@@ -81,6 +82,9 @@ export function ProductModal({ product, onClose }: Props) {
       try {
         if (product) {
           await updateProduct(product.id, data)
+          queryClient.invalidateQueries({
+            queryKey: ['override-prices', product.id]
+          })
           toast('Product updated')
         } else {
           await createProduct(data)
@@ -235,9 +239,11 @@ export function ProductModal({ product, onClose }: Props) {
           isOpen={isOverrideOpen}
           onOpenChange={setIsOverrideOpen}
           productId={product.id}
+          productName={product.name}
           customers={allCustomers.filter(
             (c) => !prices.some((p) => p.customerId === c.contactID)
           )}
+          mode='add'
         />
       )}
     </Dialog>

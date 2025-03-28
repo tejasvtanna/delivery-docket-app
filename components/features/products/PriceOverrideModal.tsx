@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useState, useTransition } from 'react'
 import { addPriceOverride } from '@/actions/product.actions'
 import { XeroCustomer } from '@/actions/customer.actions'
 import { Button } from '@/components/ui/button'
@@ -21,48 +20,56 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { toast } from 'sonner'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface PriceOverrideModalProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   productId: number
+  productName: string
   customers: XeroCustomer[]
+  customerId?: string
+  overridePrice?: number
+  mode: 'add' | 'edit'
 }
 
-export const PriceOverrideModal = ({
+export const PriceOverrideModal: React.FC<PriceOverrideModalProps> = ({
   isOpen,
   onOpenChange,
   productId,
-  customers
-}: PriceOverrideModalProps) => {
-  const [customerId, setCustomerId] = useState<string>('')
-  const [price, setPrice] = useState<string>('')
-
+  productName,
+  customers,
+  customerId,
+  overridePrice,
+  mode
+}) => {
   const queryClient = useQueryClient()
-
-  const mutation = useMutation({
-    mutationFn: ({
-      customerId,
-      price
-    }: {
-      customerId: string
-      price: number
-    }) => addPriceOverride(productId, customerId, price),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['product-prices', productId] })
-      toast('Price override added')
-      setCustomerId('')
-      setPrice('')
-      onOpenChange(false)
-    },
-    onError: () => {
-      toast('Failed to add price override')
-    }
-  })
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string>(
+    customerId || ''
+  )
+  const [price, setPrice] = useState<string>(overridePrice?.toString() || '')
+  const [isPending, startTransition] = useTransition()
 
   const handleSave = () => {
-    if (customerId && price) {
-      mutation.mutate({ customerId, price: parseFloat(price) })
+    if (selectedCustomerId && price) {
+      startTransition(async () => {
+        try {
+          await addPriceOverride(
+            productId,
+            selectedCustomerId,
+            parseFloat(price)
+          )
+          queryClient.invalidateQueries({
+            queryKey: ['override-prices', productId]
+          })
+          toast('Price override saved')
+          setSelectedCustomerId('')
+          setPrice('')
+          onOpenChange(false)
+        } catch (error) {
+          toast('Failed to save price override')
+        }
+      })
     }
   }
 
@@ -70,14 +77,23 @@ export const PriceOverrideModal = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
-          <DialogTitle>Add Price Override</DialogTitle>
+          <DialogTitle>
+            {mode === 'add' ? 'Add' : 'Edit'} Price Override
+          </DialogTitle>
         </DialogHeader>
         <div className='space-y-4'>
+          <div>
+            Product: <b>{productName}</b>
+          </div>
           <div>
             <label className='block text-sm font-medium text-gray-700'>
               Customer
             </label>
-            <Select value={customerId} onValueChange={setCustomerId}>
+            <Select
+              value={selectedCustomerId}
+              onValueChange={setSelectedCustomerId}
+              disabled={!!customerId} // Disabled if customerId is passed
+            >
               <SelectTrigger>
                 <SelectValue placeholder='Select a customer' />
               </SelectTrigger>
@@ -108,9 +124,9 @@ export const PriceOverrideModal = ({
           <DialogFooter>
             <Button
               onClick={handleSave}
-              disabled={!customerId || !price || mutation.isPending}
+              disabled={!selectedCustomerId || !price || isPending}
             >
-              {mutation.isPending ? 'Saving...' : 'Save Override'}
+              {isPending ? 'Saving...' : 'Save'}
             </Button>
           </DialogFooter>
         </div>

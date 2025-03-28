@@ -8,7 +8,7 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip'
 import { Settings } from 'lucide-react'
-import { Home, LineChart, Package, ShoppingCart, Users2 } from 'lucide-react'
+import { Home, Newspaper, Package, Users2 } from 'lucide-react'
 
 export const DesktopNav = () => {
   return (
@@ -34,10 +34,11 @@ export const DesktopNav = () => {
           <Users2 className='h-5 w-5' />
         </NavItem>
 
-        {/* <NavItem href='#' label='Orders'>
-          <ShoppingCart className='h-5 w-5' />
+        <NavItem href='/dockets' label='Dockets'>
+          <Newspaper className='h-5 w-5' />
         </NavItem>
 
+        {/* 
         <NavItem href='#' label='Analytics'>
           <LineChart className='h-5 w-5' />
         </NavItem> */}

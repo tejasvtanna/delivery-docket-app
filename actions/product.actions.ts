@@ -5,9 +5,11 @@ import { revalidatePath } from 'next/cache'
 import { Product, ProductPrice } from '@prisma/client'
 import { ProductFormData } from '@/schemas/product.schemas'
 
-export async function getProducts(): Promise<Product[]> {
+export async function getProducts(): Promise<
+  (Product & { prices: ProductPrice[] })[]
+> {
   return await prisma.product.findMany({
-    include: { prices: false }
+    include: { prices: true }
   })
 }
 
@@ -46,20 +48,43 @@ export async function updateProduct(id: number, data: ProductFormData) {
   return product
 }
 
+// export async function addPriceOverride(
+//   productId: number,
+//   customerId: string,
+//   price: number
+// ) {
+//   const overridePrice = await prisma.productPrice.create({
+//     data: {
+//       productId,
+//       customerId,
+//       price
+//     }
+//   })
+
+//   revalidatePath('/products')
+//   return overridePrice
+// }
+
 export async function addPriceOverride(
   productId: number,
   customerId: string,
   price: number
 ) {
-  const overridePrice = await prisma.productPrice.create({
-    data: {
+  const overridePrice = await prisma.productPrice.upsert({
+    where: {
+      productId_customerId: { productId, customerId } // Composite unique key
+    },
+    update: {
+      price // Update price if exists
+    },
+    create: {
       productId,
       customerId,
       price
     }
   })
-
   revalidatePath('/products')
+  revalidatePath('/dockets')
   return overridePrice
 }
 
