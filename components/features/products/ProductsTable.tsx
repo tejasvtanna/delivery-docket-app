@@ -13,7 +13,7 @@ import { Product, ProductPrice } from '@prisma/client'
 import { ProductModal } from './ProductModal'
 import { ProductDeleteConfirmation } from './ProductDeleteConfirmation'
 import { Button } from '@/components/ui/button'
-import { Link, Pencil } from 'lucide-react'
+import { Pencil } from 'lucide-react'
 import {
   Tooltip,
   TooltipContent,
@@ -21,12 +21,14 @@ import {
 } from '@radix-ui/react-tooltip'
 
 interface Props {
-  products: Product[]
+  products: (Product & { prices: ProductPrice[] })[]
 }
 
 export function ProductsTable({ products }: Props) {
   const [isAdding, setIsAdding] = useState(false)
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+  const [editingProduct, setEditingProduct] = useState<
+    (Product & { prices: ProductPrice[] }) | null
+  >(null)
 
   // console.debug({ isAdding, editingProduct })
 
