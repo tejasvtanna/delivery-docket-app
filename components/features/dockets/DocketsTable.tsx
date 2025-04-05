@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Docket, Product } from '@prisma/client'
+import { Docket, Product, ProductPrice } from '@prisma/client'
 import { Input } from '@/components/ui/input'
 import {
   Table,
@@ -13,9 +13,12 @@ import {
 } from '@/components/ui/table'
 import { useQuery } from '@tanstack/react-query'
 import { fetchXeroCustomers } from '@/actions/customer.actions'
+import { getProducts } from '@/actions/product.actions'
 import { Button } from '@/components/ui/button'
 import { DocketModal } from './DocketModal'
 import { Pencil } from 'lucide-react'
+import { Dropdown } from '@/components/common/Dropdown'
+import { XeroCustomer } from '@/actions/customer.actions'
 
 interface Props {
   dockets: (Docket & { product: Product })[]
@@ -27,43 +30,82 @@ export function DocketsTable({ dockets }: Props) {
     queryFn: fetchXeroCustomers
   })
 
+  const { data: allProducts = [] } = useQuery<
+    (Product & { prices: ProductPrice[] })[]
+  >({
+    queryKey: ['products'],
+    queryFn: getProducts
+  })
+
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCustomer, setSelectedCustomer] = useState<XeroCustomer | null>(
+    null
+  )
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isAdding, setIsAdding] = useState(false)
   const [editingDocket, setEditingDocket] = useState<
     (Docket & { product: Product }) | null
   >(null)
 
-  // Filter dockets based on search term (docketNumber, customerId, or orderNumber)
   const filteredDockets = dockets.filter((docket) => {
-    const xeroCustomer = allCustomers.find(
-      (c) => c.contactID === docket.customerId
-    )
-    return [
+    const matchesSearch = [
       docket.docketNumber,
       docket.customerId,
-      docket.orderNumber,
-      docket.product.name,
-      xeroCustomer?.name
+      docket.orderNumber
     ]
       .join(' ')
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
+
+    const matchesCustomer =
+      !selectedCustomer || selectedCustomer.contactID === docket.customerId
+
+    const matchesProduct =
+      !selectedProduct || selectedProduct.id === docket.productId
+
+    return matchesSearch && matchesCustomer && matchesProduct
   })
 
   return (
     <>
       <div className='space-y-4'>
-        {/* Header and Search */}
-        <div className='flex justify-between items-center'>
-          <h1 className='text-2xl font-bold'>Dockets</h1>
-          <div className='flex gap-2'>
+        {/* Header, Filters, and Search */}
+        <div className='flex flex-col gap-4'>
+          <div className='flex justify-between items-center'>
+            <h1 className='text-2xl font-bold'>Dockets</h1>
+            <Button onClick={() => setIsAdding(true)}>Add Docket</Button>
+          </div>
+          <div className='flex gap-4 items-center'>
             <Input
               placeholder='Search dockets...'
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className='max-w-xs'
             />
-            <Button onClick={() => setIsAdding(true)}>Add Docket</Button>
+            <Dropdown
+              placeholder='Filter by Customer'
+              options={allCustomers}
+              value={selectedCustomer}
+              onChange={(val) =>
+                setSelectedCustomer(val as XeroCustomer | null)
+              }
+              valuePropName='contactID'
+              labelPropName='name'
+              multiSelect={false}
+              className='w-72 bg-white shadow-sm text-gray-900'
+              showClearIcon={true}
+            />
+            <Dropdown
+              placeholder='Filter by Product'
+              options={allProducts}
+              value={selectedProduct}
+              onChange={(val) => setSelectedProduct(val as Product | null)}
+              valuePropName='id'
+              labelPropName='name'
+              multiSelect={false}
+              className='w-72 bg-white shadow-sm text-gray-900'
+              showClearIcon={true}
+            />
           </div>
         </div>
 
