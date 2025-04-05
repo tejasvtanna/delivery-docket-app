@@ -106,3 +106,7 @@ export async function getProductPrices(
     where: { productId }
   })
 }
+
+export async function getAllOverridePrices(): Promise<ProductPrice[]> {
+  return prisma.productPrice.findMany()
+}

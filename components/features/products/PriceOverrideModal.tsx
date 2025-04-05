@@ -60,7 +60,7 @@ export const PriceOverrideModal: React.FC<PriceOverrideModalProps> = ({
             parseFloat(price)
           )
           queryClient.invalidateQueries({
-            queryKey: ['override-prices', productId]
+            queryKey: ['override-prices']
           })
           toast('Price override saved')
           setSelectedCustomerId('')
