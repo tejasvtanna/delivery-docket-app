@@ -17,8 +17,7 @@ export const docketSchema = z.object({
   secondWeight: z.number().optional(),
   thirdWeight: z.number().optional(),
   receivedBy: z.string().optional(),
-  price: z.number({ required_error: 'Price is required' }),
-  status: z.number().int()
+  price: z.number({ required_error: 'Price is required' })
 })
 
 // Type for form data (client-side)
@@ -28,6 +27,7 @@ export type DocketFormData = z.infer<typeof docketSchema>
 export const docketDbSchema = docketSchema.extend({
   id: z.number().int().positive({ message: 'ID must be a positive integer' }),
   docketNumber: z.string().min(1, { message: 'Docket number is required' }),
+  status: z.number().int(),
   createdAt: z.date(),
   updatedAt: z.date()
 })

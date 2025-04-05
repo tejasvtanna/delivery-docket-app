@@ -80,8 +80,7 @@ export function DocketModal({ onClose }: Props) {
       secondWeight: 0,
       thirdWeight: 0,
       receivedBy: '',
-      price: 0,
-      status: 0 // Default status (adjust as needed)
+      price: 0
     }
   })
 
@@ -106,8 +105,6 @@ export function DocketModal({ onClose }: Props) {
     })
   }
 
-  // console.debug({ errors: form.formState.errors })
-
   return (
     <Dialog
       open={true}
@@ -122,287 +119,279 @@ export function DocketModal({ onClose }: Props) {
           <DialogTitle>Add Docket</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className='space-y-4 max-h-[70%]'
-          >
-            <FormField
-              name='date'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Date</FormLabel>
-                  <FormControl>
-                    <Input
-                      type='date'
-                      value={field.value.toISOString().split('T')[0]}
-                      onChange={(e) => field.onChange(new Date(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name='driverRegNumber'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Driver's Reg Number</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name='customerId'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Customer</FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value)
-                      setSelectedCustomerId(value)
-                    }}
-                    value={field.value}
-                  >
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+            <div className='grid grid-cols-2 gap-4'>
+              <FormField
+                name='date'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>Date</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select a customer' />
-                      </SelectTrigger>
+                      <Input
+                        type='date'
+                        value={field.value.toISOString().split('T')[0]}
+                        onChange={(e) =>
+                          field.onChange(new Date(e.target.value))
+                        }
+                      />
                     </FormControl>
-                    <SelectContent>
-                      {allCustomers.map((customer) => (
-                        <SelectItem
-                          key={customer.contactID}
-                          value={customer.contactID}
-                        >
-                          {customer.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name='productId'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product</FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(parseInt(value))
-                      setSelectedProductId(parseInt(value))
-                    }}
-                    value={field.value.toString()}
-                  >
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name='driverRegNumber'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>
+                      Driver's Reg Number
+                    </FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select a product' />
-                      </SelectTrigger>
+                      <Input {...field} value={field.value ?? ''} />
                     </FormControl>
-                    <SelectContent>
-                      {products.map((product) => (
-                        <SelectItem
-                          key={product.id}
-                          value={product.id.toString()}
-                        >
-                          {product.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name='customerId'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>Customer</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value)
+                        setSelectedCustomerId(value)
+                      }}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder='Select a customer' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {allCustomers.map((customer) => (
+                          <SelectItem
+                            key={customer.contactID}
+                            value={customer.contactID}
+                          >
+                            {customer.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name='productId'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>Product</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(parseInt(value))
+                        setSelectedProductId(parseInt(value))
+                      }}
+                      value={field.value.toString()}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder='Select a product' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {products.map((product) => (
+                          <SelectItem
+                            key={product.id}
+                            value={product.id.toString()}
+                          >
+                            {product.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* Price Display */}
-            <div className='flex justify-between items-center'>
-              <div>
-                <p>
-                  Base Price:{' '}
-                  {selectedProduct?.basePrice
-                    ? `$${selectedProduct.basePrice.toFixed(2)}`
-                    : 'N/A'}
-                </p>
-                <p
-                  className={cn(
-                    overridePrice ? 'text-green-700' : 'text-red-700'
-                  )}
-                >
-                  Override Price:{' '}
-                  {overridePrice !== undefined
-                    ? `$${overridePrice.toFixed(2)}`
-                    : 'N/A'}
-                </p>
+              <div className='flex justify-between items-center col-span-2'>
+                <div>
+                  <p>
+                    Base Price:{' '}
+                    {selectedProduct?.basePrice
+                      ? `$${selectedProduct.basePrice.toFixed(2)}`
+                      : 'N/A'}
+                  </p>
+                  <p
+                    className={cn(
+                      overridePrice ? 'text-green-700' : 'text-red-700'
+                    )}
+                  >
+                    Override Price:{' '}
+                    {overridePrice !== undefined
+                      ? `$${overridePrice.toFixed(2)}`
+                      : 'N/A'}
+                  </p>
+                </div>
+                {selectedProductId && selectedCustomerId && (
+                  <Button
+                    type='button'
+                    variant='outline'
+                    onClick={() => setIsOverrideOpen(true)}
+                  >
+                    {overridePrice !== undefined
+                      ? 'Edit Override'
+                      : 'Add Override'}
+                  </Button>
+                )}
               </div>
 
-              {selectedProductId && selectedCustomerId && (
-                <Button
-                  type='button'
-                  variant='outline'
-                  onClick={() => setIsOverrideOpen(true)}
-                >
-                  {overridePrice !== undefined
-                    ? 'Edit Override'
-                    : 'Add Override'}
-                </Button>
-              )}
+              <FormField
+                name='orderNumber'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>
+                      Order Number
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value ?? ''} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name='inspectedBy'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>
+                      Inspected By
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value ?? ''} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name='deliveredBy'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>
+                      Delivered By
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value ?? ''} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name='firstWeight'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>1st Weight</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        value={field.value ?? ''}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value))
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name='secondWeight'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>2nd Weight</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        value={field.value ?? ''}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value))
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name='thirdWeight'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>3rd Weight</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        value={field.value ?? ''}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value))
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name='receivedBy'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>Received By</FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value ?? ''} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name='deliveryAddress'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>
+                      Delivery Address
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea {...field} value={field.value ?? ''} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
-
-            <FormField
-              name='orderNumber'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Order Number</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* <FormField
-              name='docketNumber'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Docket Number</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
-
-            <FormField
-              name='deliveryAddress'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Delivery Address</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name='inspectedBy'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Inspected By</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name='deliveredBy'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Delivered By</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name='firstWeight'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>1st Weight</FormLabel>
-                  <FormControl>
-                    <Input
-                      type='number'
-                      value={field.value}
-                      onChange={(e) =>
-                        field.onChange(parseFloat(e.target.value))
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name='secondWeight'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>2nd Weight</FormLabel>
-                  <FormControl>
-                    <Input
-                      type='number'
-                      value={field.value}
-                      onChange={(e) =>
-                        field.onChange(parseFloat(e.target.value))
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name='thirdWeight'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>3rd Weight</FormLabel>
-                  <FormControl>
-                    <Input
-                      type='number'
-                      value={field.value}
-                      onChange={(e) =>
-                        field.onChange(parseFloat(e.target.value))
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name='receivedBy'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Received By</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <DialogFooter>
               <Button type='submit' disabled={isPending}>
                 {isPending ? 'Saving...' : 'Save'}
@@ -411,7 +400,6 @@ export function DocketModal({ onClose }: Props) {
           </form>
         </Form>
       </DialogContent>
-
       {selectedProductId && selectedCustomerId && isOverrideOpen && (
         <PriceOverrideModal
           isOpen={isOverrideOpen}
