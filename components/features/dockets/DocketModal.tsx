@@ -34,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import { PriceOverrideModal } from '@/components/features/products/PriceOverrideModal'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -72,7 +73,7 @@ export function DocketModal({ onClose }: Props) {
       customerId: '',
       productId: 0,
       orderNumber: '',
-      docketNumber: '',
+      deliveryAddress: '',
       inspectedBy: '',
       deliveredBy: '',
       firstWeight: 0,
@@ -104,6 +105,8 @@ export function DocketModal({ onClose }: Props) {
       }
     })
   }
+
+  // console.debug({ errors: form.formState.errors })
 
   return (
     <Dialog
@@ -271,12 +274,40 @@ export function DocketModal({ onClose }: Props) {
               )}
             />
 
-            <FormField
+            {/* <FormField
               name='docketNumber'
               control={form.control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Docket Number</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+
+            <FormField
+              name='deliveryAddress'
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Delivery Address</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name='inspectedBy'
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Inspected By</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>

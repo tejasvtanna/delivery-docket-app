@@ -10,16 +10,15 @@ export const docketSchema = z.object({
     .int()
     .positive({ message: 'Product ID must be a positive integer' }),
   orderNumber: z.string().min(1, { message: 'Order number is required' }),
-  docketNumber: z.string().min(1, { message: 'Docket number is required' }),
   deliveryAddress: z.string().optional(),
   inspectedBy: z.string().optional(),
   deliveredBy: z.string().optional(),
-  firstWeight: z.number().optional(),
+  firstWeight: z.number().min(1, { message: 'Enter first weight' }),
   secondWeight: z.number().optional(),
   thirdWeight: z.number().optional(),
   receivedBy: z.string().optional(),
-  price: z.number({ required_error: 'Price is required' }), // Required Float
-  status: z.number().int() // Required Int
+  price: z.number({ required_error: 'Price is required' }),
+  status: z.number().int()
 })
 
 // Type for form data (client-side)
@@ -28,6 +27,7 @@ export type DocketFormData = z.infer<typeof docketSchema>
 // Optional: Schema for server-side DB operations (with ID, createdAt, updatedAt)
 export const docketDbSchema = docketSchema.extend({
   id: z.number().int().positive({ message: 'ID must be a positive integer' }),
+  docketNumber: z.string().min(1, { message: 'Docket number is required' }),
   createdAt: z.date(),
   updatedAt: z.date()
 })
