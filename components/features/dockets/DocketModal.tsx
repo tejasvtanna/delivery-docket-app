@@ -4,12 +4,12 @@ import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
-import { createDocket } from '@/actions/docket.actions'
+import { createDocket, updateDocket } from '@/actions/docket.actions'
 import { fetchXeroCustomers } from '@/actions/customer.actions'
 import { getProducts } from '@/actions/product.actions'
 import { docketSchema, DocketFormData } from '@/schemas/docket.schema'
 import { XeroCustomer } from '@/actions/customer.actions'
-import { Product, ProductPrice } from '@prisma/client'
+import { Product, ProductPrice, Docket } from '@prisma/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -41,16 +41,17 @@ import { cn } from '@/lib/utils'
 
 interface Props {
   onClose: () => void
+  docket?: Docket & { product: Product } // Optional for editing
 }
 
-export function DocketModal({ onClose }: Props) {
+export function DocketModal({ onClose, docket }: Props) {
   const [isPending, startTransition] = useTransition()
   const [isOverrideOpen, setIsOverrideOpen] = useState(false)
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
-    null
+    docket?.productId ?? null
   )
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(
-    null
+    docket?.customerId ?? null
   )
 
   // Fetch customers and products
@@ -67,24 +68,39 @@ export function DocketModal({ onClose }: Props) {
 
   const form = useForm<DocketFormData>({
     resolver: zodResolver(docketSchema),
-    defaultValues: {
-      date: new Date(),
-      driverRegNumber: '',
-      customerId: '',
-      productId: 0,
-      orderNumber: '',
-      deliveryAddress: '',
-      inspectedBy: '',
-      deliveredBy: '',
-      firstWeight: 0,
-      secondWeight: 0,
-      thirdWeight: 0,
-      receivedBy: '',
-      price: 0
-    }
+    defaultValues: docket
+      ? {
+          date: new Date(docket.date),
+          driverRegNumber: docket.driverRegNumber ?? '',
+          customerId: docket.customerId,
+          productId: docket.productId,
+          orderNumber: docket.orderNumber,
+          deliveryAddress: docket.deliveryAddress ?? '',
+          inspectedBy: docket.inspectedBy ?? '',
+          deliveredBy: docket.deliveredBy ?? '',
+          firstWeight: docket.firstWeight ?? 0,
+          secondWeight: docket.secondWeight ?? 0,
+          thirdWeight: docket.thirdWeight ?? 0,
+          receivedBy: docket.receivedBy ?? '',
+          price: docket.price
+        }
+      : {
+          date: new Date(),
+          driverRegNumber: '',
+          customerId: '',
+          productId: 0,
+          orderNumber: '',
+          deliveryAddress: '',
+          inspectedBy: '',
+          deliveredBy: '',
+          firstWeight: 0,
+          secondWeight: 0,
+          thirdWeight: 0,
+          receivedBy: '',
+          price: 0
+        }
   })
 
-  // Get selected product and override price
   const selectedProduct = products.find((p) => p.id === selectedProductId)
   const overridePrice = selectedProduct?.prices.find(
     (price) => price.customerId === selectedCustomerId
@@ -95,12 +111,17 @@ export function DocketModal({ onClose }: Props) {
       try {
         const priceToSave = overridePrice ?? selectedProduct?.basePrice ?? 0
         const docketData = { ...data, price: priceToSave }
-        await createDocket(docketData)
-        toast('Docket created')
+        if (docket) {
+          await updateDocket(docket.id, docketData)
+          toast('Docket updated')
+        } else {
+          await createDocket(docketData)
+          toast('Docket created')
+        }
         onClose()
         form.reset()
       } catch (error) {
-        toast('Failed to create docket')
+        toast(`Failed to ${docket ? 'update' : 'create'} docket`)
       }
     })
   }
@@ -116,7 +137,7 @@ export function DocketModal({ onClose }: Props) {
         className='max-h-[87%] overflow-y-auto'
       >
         <DialogHeader>
-          <DialogTitle>Add Docket</DialogTitle>
+          <DialogTitle>{docket ? 'Edit Docket' : 'Add Docket'}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
@@ -221,7 +242,6 @@ export function DocketModal({ onClose }: Props) {
                   </FormItem>
                 )}
               />
-
               <div className='flex justify-between items-center col-span-2'>
                 <div>
                   <p>
@@ -253,7 +273,6 @@ export function DocketModal({ onClose }: Props) {
                   </Button>
                 )}
               </div>
-
               <FormField
                 name='orderNumber'
                 control={form.control}
@@ -269,7 +288,6 @@ export function DocketModal({ onClose }: Props) {
                   </FormItem>
                 )}
               />
-
               <FormField
                 name='inspectedBy'
                 control={form.control}
@@ -285,7 +303,6 @@ export function DocketModal({ onClose }: Props) {
                   </FormItem>
                 )}
               />
-
               <FormField
                 name='deliveredBy'
                 control={form.control}
@@ -301,7 +318,6 @@ export function DocketModal({ onClose }: Props) {
                   </FormItem>
                 )}
               />
-
               <FormField
                 name='firstWeight'
                 control={form.control}
@@ -321,7 +337,6 @@ export function DocketModal({ onClose }: Props) {
                   </FormItem>
                 )}
               />
-
               <FormField
                 name='secondWeight'
                 control={form.control}
@@ -341,7 +356,6 @@ export function DocketModal({ onClose }: Props) {
                   </FormItem>
                 )}
               />
-
               <FormField
                 name='thirdWeight'
                 control={form.control}
@@ -361,7 +375,6 @@ export function DocketModal({ onClose }: Props) {
                   </FormItem>
                 )}
               />
-
               <FormField
                 name='receivedBy'
                 control={form.control}
@@ -375,7 +388,6 @@ export function DocketModal({ onClose }: Props) {
                   </FormItem>
                 )}
               />
-
               <FormField
                 name='deliveryAddress'
                 control={form.control}

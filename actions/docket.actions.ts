@@ -39,7 +39,6 @@ export async function createDocket(data: DocketFormData) {
       customerId: validatedData.customerId,
       productId: validatedData.productId,
       orderNumber: validatedData.orderNumber,
-      // docketNumber: validatedData.docketNumber,
       deliveryAddress: validatedData.deliveryAddress ?? null,
       inspectedBy: validatedData.inspectedBy ?? null,
       deliveredBy: validatedData.deliveredBy ?? null,
@@ -47,9 +46,8 @@ export async function createDocket(data: DocketFormData) {
       secondWeight: validatedData.secondWeight ?? null,
       thirdWeight: validatedData.thirdWeight ?? null,
       receivedBy: validatedData.receivedBy ?? null,
-      price: validatedData.price, // Required
+      price: validatedData.price,
       status: 1
-      // createdAt and updatedAt are set by Prisma defaults
     }
   })
   revalidatePath('/dockets')
@@ -57,8 +55,9 @@ export async function createDocket(data: DocketFormData) {
 }
 
 // Update an existing docket
+// ... other imports and actions ...
+
 export async function updateDocket(id: number, data: DocketFormData) {
-  // Validate input
   const validatedData = docketSchema.parse(data)
 
   const docket = await prisma.docket.update({
@@ -69,7 +68,6 @@ export async function updateDocket(id: number, data: DocketFormData) {
       customerId: validatedData.customerId,
       productId: validatedData.productId,
       orderNumber: validatedData.orderNumber,
-      // docketNumber: validatedData.docketNumber,
       deliveryAddress: validatedData.deliveryAddress ?? null,
       inspectedBy: validatedData.inspectedBy ?? null,
       deliveredBy: validatedData.deliveredBy ?? null,
@@ -77,9 +75,7 @@ export async function updateDocket(id: number, data: DocketFormData) {
       secondWeight: validatedData.secondWeight ?? null,
       thirdWeight: validatedData.thirdWeight ?? null,
       receivedBy: validatedData.receivedBy ?? null,
-      price: validatedData.price, // Required
-      status: validatedData.status // Required
-      // updatedAt is auto-updated by Prisma
+      price: validatedData.price
     }
   })
   revalidatePath('/dockets')

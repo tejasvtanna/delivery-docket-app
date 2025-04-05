@@ -53,7 +53,7 @@ model Docket {
   thirdWeight     Float?
   receivedBy      String?
   price           Float
-  status          Int
+  status          Int      @default(1)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

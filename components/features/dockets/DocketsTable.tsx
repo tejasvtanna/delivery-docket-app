@@ -15,6 +15,7 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchXeroCustomers } from '@/actions/customer.actions'
 import { Button } from '@/components/ui/button'
 import { DocketModal } from './DocketModal'
+import { Pencil } from 'lucide-react'
 
 interface Props {
   dockets: (Docket & { product: Product })[]
@@ -28,14 +29,26 @@ export function DocketsTable({ dockets }: Props) {
 
   const [searchTerm, setSearchTerm] = useState('')
   const [isAdding, setIsAdding] = useState(false)
+  const [editingDocket, setEditingDocket] = useState<
+    (Docket & { product: Product }) | null
+  >(null)
 
   // Filter dockets based on search term (docketNumber, customerId, or orderNumber)
-  const filteredDockets = dockets.filter((docket) =>
-    [docket.docketNumber, docket.customerId, docket.orderNumber]
+  const filteredDockets = dockets.filter((docket) => {
+    const xeroCustomer = allCustomers.find(
+      (c) => c.contactID === docket.customerId
+    )
+    return [
+      docket.docketNumber,
+      docket.customerId,
+      docket.orderNumber,
+      docket.product.name,
+      xeroCustomer?.name
+    ]
       .join(' ')
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
-  )
+  })
 
   return (
     <>
@@ -43,7 +56,6 @@ export function DocketsTable({ dockets }: Props) {
         {/* Header and Search */}
         <div className='flex justify-between items-center'>
           <h1 className='text-2xl font-bold'>Dockets</h1>
-
           <div className='flex gap-2'>
             <Input
               placeholder='Search dockets...'
@@ -67,6 +79,7 @@ export function DocketsTable({ dockets }: Props) {
                 <TableHead>Product</TableHead>
                 <TableHead>Price</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -88,11 +101,20 @@ export function DocketsTable({ dockets }: Props) {
                     <TableCell>{docket.product.name}</TableCell>
                     <TableCell>${docket.price.toFixed(2)}</TableCell>
                     <TableCell>{docket.status}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant='ghost'
+                        size='icon'
+                        onClick={() => setEditingDocket(docket)}
+                      >
+                        <Pencil className='h-4 w-4' />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className='text-center'>
+                  <TableCell colSpan={8} className='text-center'>
                     No dockets found
                   </TableCell>
                 </TableRow>
@@ -103,6 +125,12 @@ export function DocketsTable({ dockets }: Props) {
       </div>
 
       {isAdding && <DocketModal onClose={() => setIsAdding(false)} />}
+      {editingDocket && (
+        <DocketModal
+          docket={editingDocket}
+          onClose={() => setEditingDocket(null)}
+        />
+      )}
     </>
   )
 }
