@@ -5,7 +5,11 @@ import { revalidatePath } from 'next/cache'
 import { Product, ProductPrice } from '@prisma/client'
 import { ProductFormData } from '@/schemas/product.schemas'
 
-export async function getProducts(): Promise<
+export async function getProducts(): Promise<Product[]> {
+  return await prisma.product.findMany()
+}
+
+export async function getProductsWithPrices(): Promise<
   (Product & { prices: ProductPrice[] })[]
 > {
   return await prisma.product.findMany({

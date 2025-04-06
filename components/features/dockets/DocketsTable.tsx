@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { Docket, Product, ProductPrice } from '@prisma/client'
+import { useRef, useState } from 'react'
+import { useReactToPrint } from 'react-to-print'
+import { Docket, Product } from '@prisma/client'
 import { Input } from '@/components/ui/input'
 import {
   Table,
@@ -16,7 +17,8 @@ import { fetchXeroCustomers } from '@/actions/customer.actions'
 import { getProducts } from '@/actions/product.actions'
 import { Button } from '@/components/ui/button'
 import { DocketModal } from './DocketModal'
-import { Pencil } from 'lucide-react'
+import { DocketPrintView } from './DocketPrintView' // New component
+import { Pencil, Printer } from 'lucide-react'
 import { Dropdown } from '@/components/common/Dropdown'
 import { XeroCustomer } from '@/actions/customer.actions'
 
@@ -24,15 +26,15 @@ interface Props {
   dockets: (Docket & { product: Product })[]
 }
 
-export function DocketsTable({ dockets }: Props) {
+export const DocketsTable = ({ dockets }: Props) => {
+  const contentRef = useRef<HTMLDivElement>(null)
+
   const { data: allCustomers = [] } = useQuery({
     queryKey: ['xero-customers'],
     queryFn: fetchXeroCustomers
   })
 
-  const { data: allProducts = [] } = useQuery<
-    (Product & { prices: ProductPrice[] })[]
-  >({
+  const { data: allProducts = [] } = useQuery<Product[]>({
     queryKey: ['products'],
     queryFn: getProducts
   })
@@ -46,7 +48,11 @@ export function DocketsTable({ dockets }: Props) {
   const [editingDocket, setEditingDocket] = useState<
     (Docket & { product: Product }) | null
   >(null)
+  const [printingDocket, setPrintingDocket] = useState<
+    (Docket & { product: Product }) | null
+  >(null)
 
+  // Filter dockets based on search term, customer, and product
   const filteredDockets = dockets.filter((docket) => {
     const matchesSearch = [
       docket.docketNumber,
@@ -59,11 +65,16 @@ export function DocketsTable({ dockets }: Props) {
 
     const matchesCustomer =
       !selectedCustomer || selectedCustomer.contactID === docket.customerId
-
     const matchesProduct =
       !selectedProduct || selectedProduct.id === docket.productId
 
     return matchesSearch && matchesCustomer && matchesProduct
+  })
+
+  // Printing handler
+  const handleDocketPrint = useReactToPrint({
+    contentRef,
+    onAfterPrint: () => setPrintingDocket(null) // Reset after printing
   })
 
   return (
@@ -143,13 +154,25 @@ export function DocketsTable({ dockets }: Props) {
                     <TableCell>{docket.product.name}</TableCell>
                     <TableCell>${docket.price.toFixed(2)}</TableCell>
                     <TableCell>{docket.status}</TableCell>
-                    <TableCell>
+                    <TableCell className='flex gap-2'>
                       <Button
                         variant='ghost'
                         size='icon'
                         onClick={() => setEditingDocket(docket)}
                       >
                         <Pencil className='h-4 w-4' />
+                      </Button>
+                      <Button
+                        variant='ghost'
+                        size='icon'
+                        onClick={() => {
+                          setPrintingDocket(docket)
+                          setTimeout(() => {
+                            handleDocketPrint()
+                          }, 500)
+                        }}
+                      >
+                        <Printer className='h-4 w-4' />
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -172,6 +195,15 @@ export function DocketsTable({ dockets }: Props) {
           docket={editingDocket}
           onClose={() => setEditingDocket(null)}
         />
+      )}
+      {printingDocket && (
+        <div className='hidden'>
+          <DocketPrintView
+            docket={printingDocket}
+            id={`docket-print-${printingDocket.id}`}
+            ref={contentRef}
+          />
+        </div>
       )}
     </>
   )
