@@ -18,9 +18,10 @@ import { getProducts } from '@/actions/product.actions'
 import { Button } from '@/components/ui/button'
 import { DocketModal } from './DocketModal'
 import { DocketPrintView } from './DocketPrintView' // New component
-import { Pencil, Printer } from 'lucide-react'
+import { Pencil, Printer, Eye } from 'lucide-react'
 import { Dropdown } from '@/components/common/Dropdown'
 import { XeroCustomer } from '@/actions/customer.actions'
+import { DocketPrintTestModal } from './DocketPrintTestModal'
 
 interface Props {
   dockets: (Docket & { product: Product })[]
@@ -45,6 +46,7 @@ export const DocketsTable = ({ dockets }: Props) => {
   )
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isAdding, setIsAdding] = useState(false)
+  const [showPrintTest, setShowPrintTest] = useState(false)
   const [editingDocket, setEditingDocket] = useState<
     (Docket & { product: Product }) | null
   >(null)
@@ -162,6 +164,7 @@ export const DocketsTable = ({ dockets }: Props) => {
                       >
                         <Pencil className='h-4 w-4' />
                       </Button>
+
                       <Button
                         variant='ghost'
                         size='icon'
@@ -174,6 +177,17 @@ export const DocketsTable = ({ dockets }: Props) => {
                       >
                         <Printer className='h-4 w-4' />
                       </Button>
+
+                      {/* <Button
+                        variant='ghost'
+                        size='icon'
+                        onClick={() => {
+                          setPrintingDocket(docket)
+                          setShowPrintTest(true)
+                        }}
+                      >
+                        <Eye className='h-4 w-4' />
+                      </Button> */}
                     </TableCell>
                   </TableRow>
                 ))
@@ -196,14 +210,19 @@ export const DocketsTable = ({ dockets }: Props) => {
           onClose={() => setEditingDocket(null)}
         />
       )}
+
       {printingDocket && (
         <div className='hidden'>
-          <DocketPrintView
-            docket={printingDocket}
-            id={`docket-print-${printingDocket.id}`}
-            ref={contentRef}
-          />
+          <DocketPrintView docket={printingDocket} ref={contentRef} />
         </div>
+      )}
+
+      {showPrintTest && printingDocket && (
+        <DocketPrintTestModal
+          isOpen={showPrintTest}
+          onOpenChange={() => setShowPrintTest(false)}
+          docket={printingDocket}
+        />
       )}
     </>
   )
