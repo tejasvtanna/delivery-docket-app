@@ -17,11 +17,11 @@ import { fetchXeroCustomers } from '@/actions/customer.actions'
 import { getProducts } from '@/actions/product.actions'
 import { Button } from '@/components/ui/button'
 import { DocketModal } from './DocketModal'
-import { DocketPrintView } from './DocketPrintView' // New component
-import { Pencil, Printer, Eye } from 'lucide-react'
+import { DocketPrintView } from './DocketPrintView'
+import { Pencil, Printer } from 'lucide-react'
 import { Dropdown } from '@/components/common/Dropdown'
 import { XeroCustomer } from '@/actions/customer.actions'
-import { DocketPrintTestModal } from './DocketPrintTestModal'
+import { InvoiceCreationModal } from './InvoiceCreationModal'
 
 interface Props {
   dockets: (Docket & { product: Product })[]
@@ -46,13 +46,14 @@ export const DocketsTable = ({ dockets }: Props) => {
   )
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isAdding, setIsAdding] = useState(false)
-  const [showPrintTest, setShowPrintTest] = useState(false)
   const [editingDocket, setEditingDocket] = useState<
     (Docket & { product: Product }) | null
   >(null)
   const [printingDocket, setPrintingDocket] = useState<
     (Docket & { product: Product }) | null
   >(null)
+  const [selectedDockets, setSelectedDockets] = useState<number[]>([]) // Track selected docket IDs
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false)
 
   // Filter dockets based on search term, customer, and product
   const filteredDockets = dockets.filter((docket) => {
@@ -76,8 +77,24 @@ export const DocketsTable = ({ dockets }: Props) => {
   // Printing handler
   const handleDocketPrint = useReactToPrint({
     contentRef,
-    onAfterPrint: () => setPrintingDocket(null) // Reset after printing
+    onAfterPrint: () => setPrintingDocket(null)
   })
+
+  // Toggle docket selection
+  const handleSelectDocket = (docketId: number) => {
+    setSelectedDockets((prev) =>
+      prev.includes(docketId)
+        ? prev.filter((id) => id !== docketId)
+        : [...prev, docketId]
+    )
+  }
+
+  // Create invoice handler
+  const handleCreateInvoice = async () => {
+    if (selectedDockets.length > 0) {
+      setIsInvoiceModalOpen(true)
+    }
+  }
 
   return (
     <>
@@ -86,7 +103,15 @@ export const DocketsTable = ({ dockets }: Props) => {
         <div className='flex flex-col gap-4'>
           <div className='flex justify-between items-center'>
             <h1 className='text-2xl font-bold'>Dockets</h1>
-            <Button onClick={() => setIsAdding(true)}>Add Docket</Button>
+            <div className='space-x-2'>
+              <Button onClick={() => setIsAdding(true)}>Add Docket</Button>
+              <Button
+                onClick={handleCreateInvoice}
+                disabled={selectedDockets.length === 0}
+              >
+                Create Invoice
+              </Button>
+            </div>
           </div>
           <div className='flex gap-4 items-center'>
             <Input
@@ -127,6 +152,17 @@ export const DocketsTable = ({ dockets }: Props) => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>
+                  <input
+                    type='checkbox'
+                    checked={selectedDockets.length === filteredDockets.length}
+                    onChange={(e) =>
+                      setSelectedDockets(
+                        e.target.checked ? filteredDockets.map((d) => d.id) : []
+                      )
+                    }
+                  />
+                </TableHead>
                 <TableHead>Docket Number</TableHead>
                 <TableHead>Order Number</TableHead>
                 <TableHead>Date</TableHead>
@@ -141,6 +177,13 @@ export const DocketsTable = ({ dockets }: Props) => {
               {filteredDockets.length > 0 ? (
                 filteredDockets.map((docket) => (
                   <TableRow key={docket.id}>
+                    <TableCell>
+                      <input
+                        type='checkbox'
+                        checked={selectedDockets.includes(docket.id)}
+                        onChange={() => handleSelectDocket(docket.id)}
+                      />
+                    </TableCell>
                     <TableCell>{docket.docketNumber}</TableCell>
                     <TableCell>{docket.orderNumber}</TableCell>
                     <TableCell>
@@ -164,36 +207,22 @@ export const DocketsTable = ({ dockets }: Props) => {
                       >
                         <Pencil className='h-4 w-4' />
                       </Button>
-
                       <Button
                         variant='ghost'
                         size='icon'
                         onClick={() => {
                           setPrintingDocket(docket)
-                          setTimeout(() => {
-                            handleDocketPrint()
-                          }, 500)
+                          setTimeout(() => handleDocketPrint(), 500)
                         }}
                       >
                         <Printer className='h-4 w-4' />
                       </Button>
-
-                      {/* <Button
-                        variant='ghost'
-                        size='icon'
-                        onClick={() => {
-                          setPrintingDocket(docket)
-                          setShowPrintTest(true)
-                        }}
-                      >
-                        <Eye className='h-4 w-4' />
-                      </Button> */}
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={8} className='text-center'>
+                  <TableCell colSpan={9} className='text-center'>
                     No dockets found
                   </TableCell>
                 </TableRow>
@@ -210,18 +239,29 @@ export const DocketsTable = ({ dockets }: Props) => {
           onClose={() => setEditingDocket(null)}
         />
       )}
-
       {printingDocket && (
         <div className='hidden'>
-          <DocketPrintView docket={printingDocket} ref={contentRef} />
+          <DocketPrintView
+            docket={printingDocket}
+            // id={`docket-print-${printingDocket.id}`}
+            ref={contentRef}
+          />
         </div>
       )}
-
-      {showPrintTest && printingDocket && (
-        <DocketPrintTestModal
-          isOpen={showPrintTest}
-          onOpenChange={() => setShowPrintTest(false)}
-          docket={printingDocket}
+      {isInvoiceModalOpen && (
+        <InvoiceCreationModal
+          selectedDockets={
+            selectedDockets
+              .map((id) => dockets.find((d) => d.id === id))
+              .filter(Boolean) as (Docket & { product: Product })[]
+          }
+          onClose={() => setIsInvoiceModalOpen(false)}
+          onCreateInvoice={() => {
+            // Placeholder for Xero invoice creation
+            console.log('Creating invoice for dockets:', selectedDockets)
+            setSelectedDockets([])
+            setIsInvoiceModalOpen(false)
+          }}
         />
       )}
     </>

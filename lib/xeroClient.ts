@@ -11,7 +11,12 @@ const xero = new XeroClient({
   clientId: process.env.XERO_CLIENT_ID!,
   clientSecret: process.env.XERO_CLIENT_SECRET!,
   redirectUris: [process.env.XERO_REDIRECT_URI!],
-  scopes: ['accounting.contacts.read', 'offline_access']
+  // scopes: ['accounting.contacts.read', 'offline_access']
+  scopes: [
+    'accounting.transactions',
+    'accounting.contacts.read',
+    'offline_access'
+  ] // Added accounting.transactions
 })
 
 export async function getTokenSet(): Promise<TokenSet & { tenantId: string }> {
