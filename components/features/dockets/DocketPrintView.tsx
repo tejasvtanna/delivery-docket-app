@@ -125,14 +125,14 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
               <div className='row-span-2'></div>
               <div className='grid grid-cols-[1fr,0.4fr,1fr]'>
                 <span className='vc'>SALE VALUE</span>
-                <span className='vc'>$</span>
+                <span className='vc'>€</span>
                 <span className='vc'>
                   {(docket.firstWeight ?? 0) * docket.price}
                 </span>
               </div>
               <div className='grid grid-cols-[1fr,0.4fr,1fr]'>
                 <span className='vc'>CT/SUR</span>
-                <span className='vc'>$</span>
+                <span className='vc'>€</span>
                 <span className='vc'>0</span>
               </div>
 
@@ -140,7 +140,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
               <div></div>
               <div className='grid grid-cols-[1fr,0.4fr,1fr]'>
                 <span className='vc'>SUB TOTAL</span>
-                <span className='vc'>$</span>
+                <span className='vc'>€</span>
                 <span className='vc'></span>
               </div>
 
@@ -159,7 +159,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
 
               <div className='grid grid-cols-[1fr,0.4fr,1fr]'>
                 <span className='vc'>TOTAL</span>
-                <span className='vc'>$</span>
+                <span className='vc'>€</span>
                 <span className='vc'></span>
               </div>
             </section>
