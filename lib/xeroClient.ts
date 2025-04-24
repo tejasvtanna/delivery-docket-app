@@ -37,26 +37,36 @@ export async function xeroInit(): Promise<{ tenantId: string }> {
   const expiryThreshold = 5 * 60 * 1000 // 5 minutes in milliseconds
   const now = Date.now()
   if (now > tokenSet.expires_at! * 1000 - expiryThreshold) {
-    console.log('Refreshing token due to expiry or impending expiry...')
-    try {
-      const newTokenSet = await xero.refreshToken()
-      await saveTokenSet(newTokenSet, xeroAuth.tenantId)
-      xero.setTokenSet(newTokenSet)
-      console.log('Refreshed tokenSet:', {
-        ...newTokenSet,
-        tenantId: xeroAuth.tenantId
-      })
-    } catch (error) {
-      console.error('Failed to refresh Xero token:', error)
+    // console.log('Refreshing token due to expiry or impending expiry...')
+    // try {
+    //   const newTokenSet = await xero.refreshToken()
+    //   await saveTokenSet(newTokenSet, xeroAuth.tenantId)
+    //   xero.setTokenSet(newTokenSet)
+    //   console.log('Refreshed tokenSet:', {
+    //     ...newTokenSet,
+    //     tenantId: xeroAuth.tenantId
+    //   })
+    // } catch (error) {
+    //   console.error('Failed to refresh Xero token:', error)
 
-      const newTokenSet = await manualRefreshToken(tokenSet.refresh_token)
-      await saveTokenSet(newTokenSet, xeroAuth.tenantId)
-      xero.setTokenSet(newTokenSet)
-      console.log('Refreshed tokenSet with fallback:', {
-        ...newTokenSet,
-        tenantId: xeroAuth.tenantId
-      })
-    }
+    //   const newTokenSet = await manualRefreshToken(tokenSet.refresh_token)
+    //   await saveTokenSet(newTokenSet, xeroAuth.tenantId)
+    //   xero.setTokenSet(newTokenSet)
+    //   console.log('Refreshed tokenSet with fallback:', {
+    //     ...newTokenSet,
+    //     tenantId: xeroAuth.tenantId
+    //   })
+    // }
+    // return { tenantId: xeroAuth.tenantId }
+    // return { tenantId: xeroAuth.tenantId }
+
+    const newTokenSet = await manualRefreshToken(tokenSet.refresh_token)
+    await saveTokenSet(newTokenSet, xeroAuth.tenantId)
+    xero.setTokenSet(newTokenSet)
+    console.log('Manually Refreshed tokenSet:', {
+      ...newTokenSet,
+      tenantId: xeroAuth.tenantId
+    })
     return { tenantId: xeroAuth.tenantId }
   }
 
