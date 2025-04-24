@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Docket, Product } from '@prisma/client'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,9 +18,6 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
-import xero, { getTokenSet } from '@/lib/xeroClient' // Import from your lib
-import { Invoice } from 'xero-node' // Import Invoice type to access TypeEnum
-import { LineAmountTypes } from 'xero-node' // Import Invoice type to access TypeEnum
 import { createXeroInvoice } from '@/actions/invoice.actions'
 
 interface InvoiceCreationModalProps {
@@ -36,23 +33,6 @@ export const InvoiceCreationModal = ({
 }: InvoiceCreationModalProps) => {
   const [isCreating, setIsCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  // Initialize Xero client with tokens
-  //   useEffect(() => {
-  //     const initializeXero = async () => {
-  //       try {
-  //         const tokenSet = await getTokenSet()
-  //         // No need to set tenantId separately; it's handled by the token set
-  //       } catch (err) {
-  //         setError(
-  //           'Failed to initialize Xero client: ' +
-  //             (err instanceof Error ? err.message : 'Unknown error')
-  //         )
-  //         console.error(err)
-  //       }
-  //     }
-  //     initializeXero()
-  //   }, [])
 
   // Create invoice in Xero using the amount column
   const handleCreateXeroInvoice = async () => {
