@@ -25,6 +25,16 @@ export async function xeroInit(): Promise<{ tenantId: string }> {
 
   const tokenSet: TokenSet = xeroAuth.tokenSet as unknown as TokenSet
 
+  // // Validate refresh_token presence
+  if (!tokenSet.refresh_token) {
+    throw new Error(
+      'Refresh token missing in tokenSet. Please re-authenticate with Xero.'
+    )
+  }
+
+  xero.setTokenSet(tokenSet)
+  // console.log('Xero client state before refresh:', xero)
+
   const expiryThreshold = 5 * 60 * 1000 // 5 minutes in milliseconds
   const now = Date.now()
   if (now > tokenSet.expires_at! * 1000 - expiryThreshold) {
@@ -34,19 +44,23 @@ export async function xeroInit(): Promise<{ tenantId: string }> {
       await saveTokenSet(newTokenSet, xeroAuth.tenantId)
       xero.setTokenSet(newTokenSet)
       console.log('Refreshed tokenSet:', {
-        access_token: newTokenSet.access_token,
-        refresh_token: newTokenSet.refresh_token,
-        expires_at: newTokenSet.expires_at,
+        ...newTokenSet,
         tenantId: xeroAuth.tenantId
       })
     } catch (error) {
       console.error('Failed to refresh Xero token:', error)
-      throw new Error('Token refresh failed. Please re-authenticate with Xero.')
+
+      const newTokenSet = await manualRefreshToken(tokenSet.refresh_token)
+      await saveTokenSet(newTokenSet, xeroAuth.tenantId)
+      xero.setTokenSet(newTokenSet)
+      console.log('Refreshed tokenSet with fallback:', {
+        ...newTokenSet,
+        tenantId: xeroAuth.tenantId
+      })
     }
     return { tenantId: xeroAuth.tenantId }
   }
 
-  xero.setTokenSet(tokenSet)
   console.log(
     'Token is valid, no refresh needed. Expires at:',
     new Date(tokenSet.expires_at! * 1000)
@@ -80,6 +94,35 @@ export async function saveTokenSet(tokenSet: TokenSet, tenantId: string) {
         tenantId
       }
     })
+  }
+}
+
+// Fallback function to manually refresh token
+async function manualRefreshToken(refreshToken: string): Promise<TokenSet> {
+  const response = await fetch('https://identity.xero.com/connect/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken,
+      client_id: process.env.XERO_CLIENT_ID!,
+      client_secret: process.env.XERO_CLIENT_SECRET!
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to refresh token: ${response.statusText}`)
+  }
+
+  const data = await response.json()
+  return {
+    access_token: data.access_token,
+    refresh_token: data.refresh_token,
+    expires_at: Math.floor(Date.now() / 1000) + data.expires_in,
+    token_type: data.token_type,
+    scope: data.scope,
+    expired: () => false,
+    claims: data.claims
   }
 }
 
