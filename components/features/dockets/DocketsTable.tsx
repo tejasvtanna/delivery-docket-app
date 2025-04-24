@@ -98,7 +98,9 @@ export const DocketsTable = ({ dockets }: Props) => {
         {/* Header, Filters, and Search */}
         <div className='flex flex-col gap-4'>
           <div className='flex justify-between items-center'>
-            <h1 className='text-2xl font-bold'>Dockets</h1>
+            <h1 className='text-2xl font-bold'>
+              Dockets ({filteredDockets.length})
+            </h1>
             <div className='space-x-2'>
               <Button onClick={() => setIsAdding(true)}>Add Docket</Button>
               <Button
