@@ -45,7 +45,9 @@ export function CustomersTable() {
   return (
     <>
       <div className='flex justify-between items-center'>
-        <h1 className='text-2xl font-bold mb-5'>Customers</h1>
+        <h1 className='text-2xl font-bold mb-5'>
+          Customers ({filteredCustomers.length})
+        </h1>
 
         <Input
           onChange={(e) => setSearchText(e.target.value.toLowerCase())}

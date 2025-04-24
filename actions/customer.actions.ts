@@ -67,7 +67,7 @@ export async function fetchXeroCustomers(): Promise<XeroCustomer[]> {
       page += 1
       hasMore = response.body.contacts?.length === pageSize // Check raw response length
 
-      if (page > 2) break
+      // if (page > 2) break
     }
 
     console.debug(`Fetched ${allCustomers.length} customers`)
