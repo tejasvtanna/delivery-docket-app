@@ -264,7 +264,7 @@ export function DocketModal({ onClose, docket }: Props) {
                   <div>
                     Base Price:{' '}
                     {selectedProduct?.basePrice
-                      ? `$${selectedProduct.basePrice.toFixed(2)}`
+                      ? `€${selectedProduct.basePrice.toFixed(2)}`
                       : 'N/A'}
                   </div>
                   <div
@@ -277,7 +277,7 @@ export function DocketModal({ onClose, docket }: Props) {
                       {isLoadingOverridePrices ? (
                         <LoaderCircle className='animate-spin h-4 w-4' />
                       ) : overridePrice !== undefined ? (
-                        `$${overridePrice.toFixed(2)}`
+                        `€${overridePrice.toFixed(2)}`
                       ) : (
                         'N/A'
                       )}
