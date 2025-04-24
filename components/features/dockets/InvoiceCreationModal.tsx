@@ -102,10 +102,10 @@ export const InvoiceCreationModal = ({
                   <TableCell>{docket.docketNumber}</TableCell>
                   <TableCell>{docket.orderNumber}</TableCell>
                   <TableCell>{docket.product.name}</TableCell>
-                  <TableCell>${docket.price.toFixed(2)}</TableCell>
+                  <TableCell>€{docket.price.toFixed(2)}</TableCell>
                   <TableCell>{docket.firstWeight}</TableCell>
                   <TableCell>
-                    ${(docket.price * (docket.firstWeight ?? 1)).toFixed(2)}
+                    €{(docket.price * (docket.firstWeight ?? 1)).toFixed(2)}
                   </TableCell>
                 </TableRow>
               ))}
@@ -113,7 +113,7 @@ export const InvoiceCreationModal = ({
                 <TableCell colSpan={5} className='text-right font-bold'>
                   Total
                 </TableCell>
-                <TableCell>${totalAmount.toFixed(2)}</TableCell>
+                <TableCell>€{totalAmount.toFixed(2)}</TableCell>
               </TableRow>
             </TableBody>
           </Table>

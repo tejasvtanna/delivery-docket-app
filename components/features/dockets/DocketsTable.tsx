@@ -197,7 +197,7 @@ export const DocketsTable = ({ dockets }: Props) => {
                       }
                     </TableCell>
                     <TableCell>{docket.product.name}</TableCell>
-                    <TableCell>${docket.price.toFixed(2)}</TableCell>
+                    <TableCell>€{docket.price.toFixed(2)}</TableCell>
                     <TableCell>{docket.status}</TableCell>
                     <TableCell className='flex gap-2'>
                       <Button

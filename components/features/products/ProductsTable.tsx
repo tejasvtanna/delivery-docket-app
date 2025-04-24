@@ -53,7 +53,7 @@ export function ProductsTable({ products }: Props) {
               <TableRow key={product.id}>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>
-                  {product.basePrice ? `$${product.basePrice}` : 'N/A'}
+                  {product.basePrice ? `€${product.basePrice}` : 'N/A'}
                 </TableCell>
                 <TableCell>
                   <div className='flex gap-2'>
