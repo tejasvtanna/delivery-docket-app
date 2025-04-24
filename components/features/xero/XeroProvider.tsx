@@ -34,7 +34,8 @@ export function XeroProvider({ children }: Props) {
   if (error) {
     return (
       <div className='flex items-center justify-center min-h-screen flex-col gap-4'>
-        <p>Failed to load Xero customers: {error.message}</p>
+        {/* <p>Failed to load Xero customers: {error.message}</p> */}
+        <p>Please authenticate with Xero</p>
         <Button asChild>
           <Link href='/api/xero-auth'>Connect to Xero</Link>
         </Button>
