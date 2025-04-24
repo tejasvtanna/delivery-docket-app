@@ -145,7 +145,7 @@ export function ProductModal({ product, onClose }: Props) {
               name='basePrice'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Base Price (Optional)</FormLabel>
+                  <FormLabel>Base Price</FormLabel>
                   <FormControl>
                     <Input
                       type='number'

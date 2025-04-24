@@ -4,7 +4,7 @@ import { z } from 'zod'
 // Base product schema for form validation
 export const productSchema = z.object({
   name: z.string().min(1, { message: 'Product name is required' }),
-  basePrice: z.number().optional(), // Optional base price in dollars
+  basePrice: z.number({ message: 'Base Price is required' }),
   prices: z.record(
     z.string(), // customerId
     z.number().optional() // Customer-specific price, undefined if not set

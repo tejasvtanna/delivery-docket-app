@@ -23,7 +23,7 @@ model XeroAuth {
 model Product {
   id        Int            @id @default(autoincrement())
   name      String         @unique
-  basePrice Float? // Optional default price
+  basePrice Float
   prices    ProductPrice[] // Customer-specific prices
   dockets   Docket[]
 
