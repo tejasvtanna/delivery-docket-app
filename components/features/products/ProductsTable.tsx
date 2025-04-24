@@ -52,7 +52,9 @@ export function ProductsTable({ products }: Props) {
     <>
       <div className='w-full'>
         <div className='flex justify-between items-center mb-5'>
-          <h1 className='text-2xl font-bold'>Products</h1>
+          <h1 className='text-2xl font-bold'>
+            Products ({filteredProducts.length})
+          </h1>
           <div className='flex gap-3'>
             <Input
               type='text'
