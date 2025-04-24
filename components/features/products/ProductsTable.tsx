@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import {
   Table,
   TableBody,
@@ -19,6 +19,7 @@ import {
   TooltipContent,
   TooltipTrigger
 } from '@radix-ui/react-tooltip'
+import { Input } from '@/components/ui/input' // Assuming you have a styled Input component
 
 interface Props {
   products: (Product & { prices: ProductPrice[] })[]
@@ -29,15 +30,39 @@ export function ProductsTable({ products }: Props) {
   const [editingProduct, setEditingProduct] = useState<
     (Product & { prices: ProductPrice[] }) | null
   >(null)
+  const [searchTerm, setSearchTerm] = useState('')
 
-  // console.debug({ isAdding, editingProduct })
+  // Filter products based on search term
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const nameMatch = product.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+      const priceMatch =
+        product.basePrice &&
+        searchTerm &&
+        String(product.basePrice)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      return nameMatch || priceMatch
+    })
+  }, [products, searchTerm])
 
   return (
     <>
       <div className='w-full'>
         <div className='flex justify-between items-center mb-5'>
           <h1 className='text-2xl font-bold'>Products</h1>
-          <Button onClick={() => setIsAdding(true)}>Add Product</Button>
+          <div className='flex gap-3'>
+            <Input
+              type='text'
+              placeholder='Search by name or price...'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className='w-64'
+            />
+            <Button onClick={() => setIsAdding(true)}>Add Product</Button>
+          </div>
         </div>
 
         <Table>
@@ -49,7 +74,7 @@ export function ProductsTable({ products }: Props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <TableRow key={product.id}>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>
