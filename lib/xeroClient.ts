@@ -25,7 +25,7 @@ export async function xeroInit(): Promise<{ tenantId: string }> {
 
   const tokenSet: TokenSet = xeroAuth.tokenSet as unknown as TokenSet
 
-  // // Validate refresh_token presence
+  // Validate refresh_token presence
   if (!tokenSet.refresh_token) {
     throw new Error(
       'Refresh token missing in tokenSet. Please re-authenticate with Xero.'
@@ -33,7 +33,6 @@ export async function xeroInit(): Promise<{ tenantId: string }> {
   }
 
   xero.setTokenSet(tokenSet)
-  // console.log('Xero client state before refresh:', xero)
 
   const expiryThreshold = 5 * 60 * 1000 // 5 minutes in milliseconds
   const now = Date.now()
