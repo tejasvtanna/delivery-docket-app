@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     // Mutate tokenSet directly to add tenantId
     ;(tokenSet as TokenSet & { tenantId?: string }).tenantId = tenantId
 
-    await saveTokenSet(tokenSet)
+    await saveTokenSet(tokenSet, tenantId)
 
     // Redirect to the production URL in prod, localhost in dev
     const redirectUrl =

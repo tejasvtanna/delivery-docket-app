@@ -1,14 +1,14 @@
 'use server'
 
 import { Docket, Product } from '@prisma/client'
-import xero, { getTokenSet } from '@/lib/xeroClient'
+import xero, { xeroInit } from '@/lib/xeroClient'
 import { Invoice } from 'xero-node'
 import { LineAmountTypes } from 'xero-node'
 
 export async function createXeroInvoice(
   selectedDockets: (Docket & { product: Product })[]
 ) {
-  const tokenSet = await getTokenSet()
+  const tokenSet = await xeroInit()
   if (!tokenSet.tenantId) {
     throw new Error('Xero tenant ID not found in token set')
   }

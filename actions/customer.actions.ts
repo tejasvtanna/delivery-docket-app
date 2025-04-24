@@ -1,6 +1,6 @@
 'use server'
 
-import xero, { getTokenSet } from '@/lib/xeroClient'
+import xero, { xeroInit } from '@/lib/xeroClient'
 
 // Interface for Xero Contact (simplified, with any for now)
 export interface XeroCustomer {
@@ -26,7 +26,7 @@ export async function fetchXeroCustomers(): Promise<XeroCustomer[]> {
   console.debug('Fetching customers...')
 
   try {
-    const tokenSet = await getTokenSet()
+    const tokenSet = await xeroInit()
     const tenantId = tokenSet.tenantId
 
     const pageSize = 100 // Xero’s max page size
