@@ -37,7 +37,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
           `}
         </style>
         <h2 className='text-center font-bold text-lg mb-2 uppercase'>
-          Cash Sale Invoice / Delivery Docket
+          Delivery Docket
         </h2>
 
         <div className={uniqueClass}>
