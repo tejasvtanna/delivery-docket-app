@@ -22,15 +22,16 @@ export async function createXeroInvoice(
       description: `${docket.product.name} (Docket #${docket.docketNumber})`,
       quantity: docket.firstWeight ?? 1,
       unitAmount: docket.price,
-      accountCode: '200' // Replace with your default revenue account code
+      accountCode: '10' // Updated to client-specified default
+      // taxType: 'OUTPUT' // Assumes 'OUTPUT' is the TaxType for "VAT on Sales (23%)"
     })),
     date: new Date().toISOString().split('T')[0],
     dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
       .toISOString()
       .split('T')[0], // 30 days from now
     lineAmountTypes: LineAmountTypes.Exclusive,
-    status: Invoice.StatusEnum.DRAFT,
-    invoiceNumber: `INV-${Date.now()}` // Auto-generated unique invoice number
+    status: Invoice.StatusEnum.DRAFT
+    // invoiceNumber: `INV-${Date.now()}` // Auto-generated unique invoice number
   }
 
   const response = await xero.accountingApi.createInvoices(tokenSet.tenantId, {
