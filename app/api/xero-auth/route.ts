@@ -2,7 +2,14 @@ import { NextResponse } from 'next/server'
 import xero from '@/lib/xeroClient'
 
 export async function GET() {
-  const authUrl = await xero.buildConsentUrl()
-  console.debug('Xero Auth URL:', authUrl)
-  return NextResponse.redirect(authUrl)
+  try {
+    const consentUrl = await xero.buildConsentUrl()
+    return NextResponse.redirect(consentUrl)
+  } catch (error) {
+    console.error('Xero auth error:', error)
+    return NextResponse.json(
+      { error: 'Failed to initiate Xero authentication' },
+      { status: 500 }
+    )
+  }
 }

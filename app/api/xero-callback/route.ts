@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import xero, { saveTokenSet } from '@/lib/xeroClient'
-import { TokenSet } from 'xero-node' // Use xero-node's TokenSet for consistency
+import { TokenSet } from 'xero-node'
 
 export async function GET(request: Request) {
   const url = new URL(request.url)
@@ -23,13 +23,13 @@ export async function GET(request: Request) {
 
     await saveTokenSet(tokenSet)
 
-    // Optional: Invalidate cache on new tokens
-    // if (typeof window !== 'undefined') {
-    //   const { queryClient } = require('@tanstack/react-query')
-    //   queryClient.invalidateQueries(['xero-customers'])
-    // }
+    // Redirect to the production URL in prod, localhost in dev
+    const redirectUrl =
+      process.env.NODE_ENV === 'production'
+        ? 'https://delivery-docket-app.vercel.app/customers'
+        : 'http://localhost:3333/customers'
 
-    return NextResponse.redirect('http://localhost:3333/customers') // Adjust for prod
+    return NextResponse.redirect(redirectUrl)
   } catch (error) {
     console.error('Xero OAuth Callback Error:', error)
     return NextResponse.json(
