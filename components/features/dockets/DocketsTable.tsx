@@ -57,14 +57,10 @@ export const DocketsTable = ({ dockets }: Props) => {
 
   // Filter dockets based on search term, customer, and product
   const filteredDockets = dockets.filter((docket) => {
-    const matchesSearch = [
-      docket.docketNumber,
-      docket.customerId,
-      docket.orderNumber
-    ]
-      .join(' ')
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
+    const matchesSearch =
+      !searchTerm ||
+      docket.docketNumber.toString() === searchTerm ||
+      docket.orderNumber === searchTerm
 
     const matchesCustomer =
       !selectedCustomer || selectedCustomer.contactID === docket.customerId
@@ -115,7 +111,7 @@ export const DocketsTable = ({ dockets }: Props) => {
           </div>
           <div className='flex gap-4 items-center'>
             <Input
-              placeholder='Search dockets...'
+              placeholder='Search by docket # or order #'
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className='max-w-xs'
