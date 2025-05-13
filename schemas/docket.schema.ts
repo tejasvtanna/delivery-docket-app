@@ -28,6 +28,8 @@ export const docketDbSchema = docketSchema.extend({
   id: z.number().int().positive({ message: 'ID must be a positive integer' }),
   docketNumber: z.string().min(1, { message: 'Docket number is required' }),
   status: z.number().int(),
+  invoiceGeneratedOn: z.date().optional(),
+  invoiceGeneratedBy: z.string().optional(),
   createdAt: z.date(),
   updatedAt: z.date()
 })

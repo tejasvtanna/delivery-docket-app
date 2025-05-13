@@ -48,7 +48,11 @@ export async function createXeroInvoice(
       selectedDockets.map((docket) =>
         prisma.docket.update({
           where: { id: docket.id },
-          data: { status: DocketStatus.InvoiceGenerated }
+          data: {
+            status: DocketStatus.InvoiceGenerated,
+            invoiceGeneratedOn: new Date(),
+            invoiceGeneratedBy: 'S' // Hardcoded for now
+          }
         })
       )
     )

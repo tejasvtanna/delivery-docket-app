@@ -45,22 +45,24 @@ model ProductPrice {
 }
 
 model Docket {
-  id              Int      @id @default(autoincrement())
-  date            DateTime // Date field
-  driverRegNumber String?
-  customerId      String
-  productId       Int
-  orderNumber     String
-  docketNumber    Int      @default(autoincrement())
-  deliveryAddress String?
-  inspectedBy     String?
-  deliveredBy     String?
-  firstWeight     Float?
-  secondWeight    Float?
-  thirdWeight     Float?
-  receivedBy      String?
-  price           Float
-  status          Int      @default(1)
+  id                 Int       @id @default(autoincrement())
+  date               DateTime // Date field
+  driverRegNumber    String?
+  customerId         String
+  productId          Int
+  orderNumber        String
+  docketNumber       Int       @default(autoincrement())
+  deliveryAddress    String?
+  inspectedBy        String?
+  deliveredBy        String?
+  firstWeight        Float?
+  secondWeight       Float?
+  thirdWeight        Float?
+  receivedBy         String?
+  price              Float
+  status             Int       @default(1)
+  invoiceGeneratedOn DateTime?
+  invoiceGeneratedBy String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
