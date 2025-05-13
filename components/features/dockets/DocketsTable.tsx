@@ -53,7 +53,7 @@ export const DocketsTable = ({ dockets }: Props) => {
   const [printingDocket, setPrintingDocket] = useState<
     (Docket & { product: Product }) | null
   >(null)
-  const [selectedDockets, setSelectedDockets] = useState<number[]>([]) // Track selected docket IDs
+  const [selectedDockets, setSelectedDockets] = useState<Docket[]>([]) // Track selected docket IDs
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false)
 
   // Filter dockets based on search term, customer, and product
@@ -78,11 +78,11 @@ export const DocketsTable = ({ dockets }: Props) => {
   })
 
   // Toggle docket selection
-  const handleSelectDocket = (docketId: number) => {
+  const handleSelectDocket = (docket: Docket) => {
     setSelectedDockets((prev) =>
-      prev.includes(docketId)
-        ? prev.filter((id) => id !== docketId)
-        : [...prev, docketId]
+      prev.some((doc) => doc.id === docket.id)
+        ? prev.filter((doc) => doc.id !== docket.id)
+        : [...prev, docket]
     )
   }
 
@@ -92,6 +92,8 @@ export const DocketsTable = ({ dockets }: Props) => {
       setIsInvoiceModalOpen(true)
     }
   }
+
+  // console.debug({ dockets, selectedDockets })
 
   return (
     <>
@@ -106,7 +108,12 @@ export const DocketsTable = ({ dockets }: Props) => {
               <Button onClick={() => setIsAdding(true)}>Add Docket</Button>
               <Button
                 onClick={handleCreateInvoice}
-                disabled={selectedDockets.length === 0}
+                disabled={
+                  selectedDockets.length === 0 ||
+                  selectedDockets.some(
+                    (docket) => docket.status === DocketStatus.InvoiceGenerated
+                  )
+                }
               >
                 Create Invoice
               </Button>
@@ -158,7 +165,7 @@ export const DocketsTable = ({ dockets }: Props) => {
                     checked={selectedDockets.length === filteredDockets.length}
                     onChange={(e) =>
                       setSelectedDockets(
-                        e.target.checked ? filteredDockets.map((d) => d.id) : []
+                        e.target.checked ? filteredDockets : []
                       )
                     }
                   />
@@ -180,8 +187,10 @@ export const DocketsTable = ({ dockets }: Props) => {
                     <TableCell>
                       <input
                         type='checkbox'
-                        checked={selectedDockets.includes(docket.id)}
-                        onChange={() => handleSelectDocket(docket.id)}
+                        checked={selectedDockets.some(
+                          (doc) => doc.id === docket.id
+                        )}
+                        onChange={() => handleSelectDocket(docket)}
                       />
                     </TableCell>
                     <TableCell>{docket.docketNumber}</TableCell>
@@ -252,9 +261,11 @@ export const DocketsTable = ({ dockets }: Props) => {
       {isInvoiceModalOpen && (
         <InvoiceCreationModal
           selectedDockets={
-            selectedDockets
-              .map((id) => dockets.find((d) => d.id === id))
-              .filter(Boolean) as (Docket & { product: Product })[]
+            // selectedDockets.map((docket) => ({
+            //   ...docket,
+            //   product: allProducts.find((p) => p.id === docket.productId)
+            // }))
+            selectedDockets.filter(Boolean) as (Docket & { product: Product })[]
           }
           onClose={() => setIsInvoiceModalOpen(false)}
           onCreateInvoice={() => {

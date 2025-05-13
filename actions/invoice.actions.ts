@@ -4,7 +4,9 @@ import { Docket, Product } from '@prisma/client'
 import xero, { xeroInit } from '@/lib/xeroClient'
 import { Invoice } from 'xero-node'
 import { LineAmountTypes } from 'xero-node'
+import prisma from '@/lib/prisma'
 import { DocketStatus } from '@/types/docket.types'
+import { revalidatePath } from 'next/cache'
 
 export async function createXeroInvoice(
   selectedDockets: (Docket & { product: Product })[]
@@ -17,7 +19,7 @@ export async function createXeroInvoice(
   const invoiceData: Partial<Invoice> = {
     type: Invoice.TypeEnum.ACCREC,
     contact: {
-      contactID: selectedDockets[0].customerId // Simplified; adjust for multiple customers
+      contactID: selectedDockets[0].customerId
     },
     lineItems: selectedDockets.map((docket) => ({
       description: `${docket.product.name} (Docket #${docket.docketNumber})`,
@@ -41,19 +43,16 @@ export async function createXeroInvoice(
 
   if (response.body.invoices && response.body.invoices.length > 0) {
     console.log('Invoice created:', response.body.invoices[0].invoiceID)
-
-    // Update docket status to InvoiceGenerated
-    await prisma.docket.updateMany({
-      where: {
-        id: {
-          in: selectedDockets.map((docket) => docket.id)
-        }
-      },
-      data: {
-        status: DocketStatus.InvoiceGenerated
-      }
-    })
-
+    // Update docket statuses to InvoiceGenerated
+    await Promise.all(
+      selectedDockets.map((docket) =>
+        prisma.docket.update({
+          where: { id: docket.id },
+          data: { status: DocketStatus.InvoiceGenerated }
+        })
+      )
+    )
+    revalidatePath('/dockets')
     return { success: true, invoiceId: response.body.invoices[0].invoiceID }
   } else {
     throw new Error('Invoice creation failed')
