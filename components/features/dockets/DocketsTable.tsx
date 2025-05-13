@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef, useState, useMemo } from 'react'
 import { useReactToPrint } from 'react-to-print'
 import { Docket, Product } from '@prisma/client'
 import { Input } from '@/components/ui/input'
@@ -23,6 +23,12 @@ import { Dropdown } from '@/components/common/Dropdown'
 import { XeroCustomer } from '@/actions/customer.actions'
 import { InvoiceCreationModal } from './InvoiceCreationModal'
 import { DocketStatus } from '@/types/docket.types'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider
+} from '@radix-ui/react-tooltip'
 
 interface Props {
   dockets: (Docket & { product: Product })[]
@@ -53,10 +59,9 @@ export const DocketsTable = ({ dockets }: Props) => {
   const [printingDocket, setPrintingDocket] = useState<
     (Docket & { product: Product }) | null
   >(null)
-  const [selectedDockets, setSelectedDockets] = useState<Docket[]>([]) // Track selected docket IDs
+  const [selectedDockets, setSelectedDockets] = useState<Docket[]>([])
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false)
 
-  // Filter dockets based on search term, customer, and product
   const filteredDockets = dockets.filter((docket) => {
     const matchesSearch =
       !searchTerm ||
@@ -71,13 +76,11 @@ export const DocketsTable = ({ dockets }: Props) => {
     return matchesSearch && matchesCustomer && matchesProduct
   })
 
-  // Printing handler
   const handleDocketPrint = useReactToPrint({
     contentRef,
     onAfterPrint: () => setPrintingDocket(null)
   })
 
-  // Toggle docket selection
   const handleSelectDocket = (docket: Docket) => {
     setSelectedDockets((prev) =>
       prev.some((doc) => doc.id === docket.id)
@@ -86,19 +89,27 @@ export const DocketsTable = ({ dockets }: Props) => {
     )
   }
 
-  // Create invoice handler
   const handleCreateInvoice = async () => {
     if (selectedDockets.length > 0) {
       setIsInvoiceModalOpen(true)
     }
   }
 
-  // console.debug({ dockets, selectedDockets })
+  const tooltipContent = useMemo(() => {
+    if (!selectedDockets.length) return 'Select a docket'
+    if (
+      selectedDockets.some(
+        (docket) => docket.status === DocketStatus.InvoiceGenerated
+      )
+    ) {
+      return 'Invoice already generated for the selected docket(s)'
+    }
+    return 'Create invoice'
+  }, [selectedDockets])
 
   return (
     <>
       <div className='space-y-4'>
-        {/* Header, Filters, and Search */}
         <div className='flex flex-col gap-4'>
           <div className='flex justify-between items-center'>
             <h1 className='text-2xl font-bold'>
@@ -106,17 +117,29 @@ export const DocketsTable = ({ dockets }: Props) => {
             </h1>
             <div className='space-x-2'>
               <Button onClick={() => setIsAdding(true)}>Add Docket</Button>
-              <Button
-                onClick={handleCreateInvoice}
-                disabled={
-                  selectedDockets.length === 0 ||
-                  selectedDockets.some(
-                    (docket) => docket.status === DocketStatus.InvoiceGenerated
-                  )
-                }
-              >
-                Create Invoice
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <Button
+                        onClick={handleCreateInvoice}
+                        disabled={
+                          selectedDockets.length === 0 ||
+                          selectedDockets.some(
+                            (docket) =>
+                              docket.status === DocketStatus.InvoiceGenerated
+                          )
+                        }
+                      >
+                        Create Invoice
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent className='bg-gray-800 text-white text-sm rounded-md px-2 py-1 shadow-lg'>
+                    {tooltipContent}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
 
@@ -154,7 +177,6 @@ export const DocketsTable = ({ dockets }: Props) => {
           </div>
         </div>
 
-        {/* Table */}
         <div className='border rounded-md'>
           <Table>
             <TableHeader>
@@ -250,26 +272,17 @@ export const DocketsTable = ({ dockets }: Props) => {
       )}
       {printingDocket && (
         <div className='hidden'>
-          <DocketPrintView
-            docket={printingDocket}
-            // id={`docket-print-${printingDocket.id}`}
-            ref={contentRef}
-          />
+          <DocketPrintView docket={printingDocket} ref={contentRef} />
         </div>
       )}
 
       {isInvoiceModalOpen && (
         <InvoiceCreationModal
           selectedDockets={
-            // selectedDockets.map((docket) => ({
-            //   ...docket,
-            //   product: allProducts.find((p) => p.id === docket.productId)
-            // }))
             selectedDockets.filter(Boolean) as (Docket & { product: Product })[]
           }
           onClose={() => setIsInvoiceModalOpen(false)}
           onCreateInvoice={() => {
-            // Placeholder for Xero invoice creation
             console.log('Creating invoice for dockets:', selectedDockets)
             setSelectedDockets([])
             setIsInvoiceModalOpen(false)
