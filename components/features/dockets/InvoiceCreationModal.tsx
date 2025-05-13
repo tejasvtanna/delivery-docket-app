@@ -59,44 +59,62 @@ export const InvoiceCreationModal = ({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className='max-w-4xl w-full'>
         <DialogHeader>
           <DialogTitle>Create Invoice for following Dockets</DialogTitle>
         </DialogHeader>
 
         <div className='space-y-4'>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Docket Number</TableHead>
-                <TableHead>Order Number</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Qty</TableHead>
-                <TableHead>Total Amount</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {selectedDockets.map((docket) => (
-                <TableRow key={docket.id}>
-                  <TableCell>{docket.docketNumber}</TableCell>
-                  <TableCell>{docket.orderNumber}</TableCell>
-                  <TableCell>{docket.product.name}</TableCell>
-                  <TableCell>€{docket.price.toFixed(2)}</TableCell>
-                  <TableCell>{docket.firstWeight}</TableCell>
-                  <TableCell>
-                    €{(docket.price * (docket.firstWeight ?? 1)).toFixed(2)}
+          <div className='overflow-x-auto'>
+            <Table className='table-auto'>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className='whitespace-nowrap'>
+                    Docket Number
+                  </TableHead>
+                  <TableHead className='whitespace-nowrap'>
+                    Order Number
+                  </TableHead>
+                  <TableHead className='whitespace-nowrap'>Product</TableHead>
+                  <TableHead className='whitespace-nowrap'>Price</TableHead>
+                  <TableHead className='whitespace-nowrap'>Qty</TableHead>
+                  <TableHead className='whitespace-nowrap'>
+                    Total Amount
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {selectedDockets.map((docket) => (
+                  <TableRow key={docket.id}>
+                    <TableCell className='truncate max-w-[150px]'>
+                      {docket.docketNumber}
+                    </TableCell>
+                    <TableCell className='truncate max-w-[150px]'>
+                      {docket.orderNumber}
+                    </TableCell>
+                    <TableCell className='truncate max-w-[200px]'>
+                      {docket.product.name}
+                    </TableCell>
+                    <TableCell className='whitespace-nowrap'>
+                      €{docket.price.toFixed(2)}
+                    </TableCell>
+                    <TableCell>{docket.firstWeight}</TableCell>
+                    <TableCell className='whitespace-nowrap'>
+                      €{(docket.price * (docket.firstWeight ?? 1)).toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+                <TableRow>
+                  <TableCell colSpan={5} className='text-right font-bold'>
+                    Total
+                  </TableCell>
+                  <TableCell className='whitespace-nowrap'>
+                    €{totalAmount.toFixed(2)}
                   </TableCell>
                 </TableRow>
-              ))}
-              <TableRow>
-                <TableCell colSpan={5} className='text-right font-bold'>
-                  Total
-                </TableCell>
-                <TableCell>€{totalAmount.toFixed(2)}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
           {error && <p className='text-red-500'>{error}</p>}
         </div>
 
