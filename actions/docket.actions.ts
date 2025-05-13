@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { Docket, Product } from '@prisma/client'
 import { docketSchema, DocketFormData } from '@/schemas/docket.schema'
+import { DocketStatus } from '@/types/docket.types'
 
 // Get all dockets
 export async function getDockets(): Promise<(Docket & { product: Product })[]> {
@@ -47,7 +48,7 @@ export async function createDocket(data: DocketFormData) {
       thirdWeight: validatedData.thirdWeight ?? null,
       receivedBy: validatedData.receivedBy ?? null,
       price: validatedData.price,
-      status: 1
+      status: DocketStatus.Created
     }
   })
   revalidatePath('/dockets')

@@ -22,6 +22,7 @@ import { Pencil, Printer } from 'lucide-react'
 import { Dropdown } from '@/components/common/Dropdown'
 import { XeroCustomer } from '@/actions/customer.actions'
 import { InvoiceCreationModal } from './InvoiceCreationModal'
+import { DocketStatus } from '@/types/docket.types'
 
 interface Props {
   dockets: (Docket & { product: Product })[]
@@ -111,6 +112,7 @@ export const DocketsTable = ({ dockets }: Props) => {
               </Button>
             </div>
           </div>
+
           <div className='flex gap-4 items-center'>
             <Input
               placeholder='Search by docket # or order #'
@@ -196,7 +198,7 @@ export const DocketsTable = ({ dockets }: Props) => {
                     </TableCell>
                     <TableCell>{docket.product.name}</TableCell>
                     <TableCell>€{docket.price.toFixed(2)}</TableCell>
-                    <TableCell>{docket.status}</TableCell>
+                    <TableCell>{DocketStatus[docket.status]}</TableCell>
                     <TableCell className='flex gap-2'>
                       <Button
                         variant='ghost'
@@ -246,6 +248,7 @@ export const DocketsTable = ({ dockets }: Props) => {
           />
         </div>
       )}
+
       {isInvoiceModalOpen && (
         <InvoiceCreationModal
           selectedDockets={
