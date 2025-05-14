@@ -7,6 +7,7 @@ import { LineAmountTypes } from 'xero-node'
 import prisma from '@/lib/prisma'
 import { DocketStatus } from '@/types/docket.types'
 import { revalidatePath } from 'next/cache'
+import { auth, currentUser } from '@clerk/nextjs/server'
 
 export async function createXeroInvoice(
   selectedDockets: (Docket & { product: Product })[]
@@ -15,6 +16,20 @@ export async function createXeroInvoice(
   if (!tokenSet.tenantId) {
     throw new Error('Xero tenant ID not found in token set')
   }
+
+  // Get the authenticated user's details from Clerk
+  const { userId } = await auth()
+  if (!userId) {
+    throw new Error('User not authenticated')
+  }
+  const user = await currentUser()
+  const email = user?.emailAddresses[0]?.emailAddress || 'unknown'
+  const firstName = user?.firstName || ''
+  const lastName = user?.lastName || ''
+
+  // Format invoiceGeneratedBy: "firstName lastName (email)" or just "email" if names are missing
+  const invoiceGeneratedBy =
+    firstName || lastName ? `${firstName} ${lastName} (${email})`.trim() : email
 
   const invoiceData: Partial<Invoice> = {
     type: Invoice.TypeEnum.ACCREC,
@@ -51,7 +66,7 @@ export async function createXeroInvoice(
           data: {
             status: DocketStatus.InvoiceGenerated,
             invoiceGeneratedOn: new Date(),
-            invoiceGeneratedBy: 'S' // Hardcoded for now
+            invoiceGeneratedBy
           }
         })
       )
