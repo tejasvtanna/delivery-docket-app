@@ -4,6 +4,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster } from '@/components/ui/sonner'
+import { ClerkProvider } from '@clerk/nextjs'
 
 // Create QueryClient once, outside the component
 const queryClient = new QueryClient({
@@ -17,12 +18,14 @@ const queryClient = new QueryClient({
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <TooltipProvider>
-      <QueryClientProvider client={queryClient}>
-        {children}
-        <Toaster position='top-center' expand={true} />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </TooltipProvider>
+    <ClerkProvider>
+      <TooltipProvider>
+        <QueryClientProvider client={queryClient}>
+          {children}
+          <Toaster position='top-center' expand={true} />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </TooltipProvider>
+    </ClerkProvider>
   )
 }

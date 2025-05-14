@@ -8,6 +8,8 @@ import {
 } from '@/components/ui/card'
 import { Package, Users2, Newspaper } from 'lucide-react'
 import Link from 'next/link'
+import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
 
 // Define the card data array
 const dashboardCards = [
@@ -35,6 +37,12 @@ const dashboardCards = [
 ]
 
 export default async function HomePage() {
+  const { userId } = await auth()
+
+  if (!userId) {
+    redirect('/login')
+  }
+
   return (
     <XeroProvider>
       <div className='container mx-auto p-6'>

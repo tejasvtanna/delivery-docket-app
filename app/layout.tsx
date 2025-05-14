@@ -1,6 +1,6 @@
 import './globals.css'
 import { Analytics } from '@vercel/analytics/react'
-import { User } from '@/components/common/User'
+import { UserProfileMenu } from '@/components/common/UserProfileMenu'
 import Providers from '@/components/common/Providers'
 import { DesktopNav } from '@/components/common/DesktopNav'
 import { DashboardBreadcrumb } from '@/components/common/DashboardBreadcrumb'
@@ -25,9 +25,10 @@ export default function RootLayout({
 
             <div className='flex flex-col sm:gap-4 sm:py-4 sm:pl-14'>
               <header className='sticky top-0 z-30 flex h-14 justify-between items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6'>
-                <DashboardBreadcrumb />
+                {/* <DashboardBreadcrumb /> */}
+                <div></div>
                 {/* <SearchInput /> */}
-                <User />
+                <UserProfileMenu />
               </header>
 
               <main className='grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4'>
