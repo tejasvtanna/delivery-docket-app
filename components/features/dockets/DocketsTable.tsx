@@ -39,6 +39,18 @@ interface Props {
   dockets: (Docket & { product: Product })[]
 }
 
+const docketStatusOptions = Object.entries(DocketStatus)
+  .filter(([key, value]) => typeof value === 'number')
+  .map(([key, value]) => ({
+    label: key === 'InvoiceGenerated' ? 'Invoice Generated' : key, // Add space for InvoiceGenerated
+    value: value as number
+  }))
+
+interface DocketStatusOption {
+  label: string
+  value: number
+}
+
 export const DocketsTable = ({ dockets }: Props) => {
   const contentRef = useRef<HTMLDivElement>(null)
   const queryClient = useQueryClient()
@@ -58,6 +70,8 @@ export const DocketsTable = ({ dockets }: Props) => {
     null
   )
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [selectedStatus, setSelectedStatus] =
+    useState<DocketStatusOption | null>(null)
   const [isAdding, setIsAdding] = useState(false)
   const [editingDocket, setEditingDocket] = useState<
     (Docket & { product: Product }) | null
@@ -78,8 +92,10 @@ export const DocketsTable = ({ dockets }: Props) => {
       !selectedCustomer || selectedCustomer.contactID === docket.customerId
     const matchesProduct =
       !selectedProduct || selectedProduct.id === docket.productId
+    const matchesStatus =
+      !selectedStatus || selectedStatus.value === docket.status
 
-    return matchesSearch && matchesCustomer && matchesProduct
+    return matchesSearch && matchesCustomer && matchesProduct && matchesStatus
   })
 
   const handleDocketPrint = useReactToPrint({
@@ -125,7 +141,10 @@ export const DocketsTable = ({ dockets }: Props) => {
     <>
       <div className='space-y-4'>
         <div className='flex flex-col gap-4'>
-          <div className='flex justify-between items-center'>
+          <div
+            data-header-and-cta
+            className='flex justify-between items-center'
+          >
             <h1 className='text-2xl font-bold'>
               Dockets ({filteredDockets.length})
             </h1>
@@ -157,7 +176,7 @@ export const DocketsTable = ({ dockets }: Props) => {
             </div>
           </div>
 
-          <div className='flex gap-4 items-center'>
+          <div data-filters className='flex gap-4 items-center'>
             <Input
               placeholder='Search by docket # or order #'
               value={searchTerm}
@@ -185,6 +204,16 @@ export const DocketsTable = ({ dockets }: Props) => {
               valuePropName='id'
               labelPropName='name'
               multiSelect={false}
+              className='w-72 bg-white shadow-sm text-gray-900'
+              showClearIcon={true}
+            />
+            <Dropdown
+              placeholder='Filter by Status'
+              options={docketStatusOptions}
+              value={selectedStatus}
+              onChange={(val) =>
+                setSelectedStatus(val as DocketStatusOption | null)
+              }
               className='w-72 bg-white shadow-sm text-gray-900'
               showClearIcon={true}
             />
