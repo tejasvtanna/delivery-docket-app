@@ -149,7 +149,7 @@ export function ProductModal({ product, onClose }: Props) {
                   <FormControl>
                     <Input
                       type='number'
-                      step='0.01'
+                      step='1'
                       placeholder='0.00'
                       value={field.value ?? ''}
                       onChange={(e) =>
