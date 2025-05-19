@@ -28,7 +28,6 @@ export async function createProduct(data: Omit<ProductFormData, 'prices'>) {
   })
 
   revalidatePath('/products')
-  revalidatePath('/dockets')
   return product
 }
 

@@ -88,6 +88,13 @@ export function ProductModal({ product, onClose }: Props) {
           toast('Product updated')
         } else {
           await createProduct(data)
+          queryClient.invalidateQueries({
+            queryKey: ['products']
+          })
+          queryClient.invalidateQueries({
+            queryKey: ['override-prices']
+          })
+
           toast('Product added')
         }
         onClose?.()
