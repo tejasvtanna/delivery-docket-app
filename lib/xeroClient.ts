@@ -159,9 +159,4 @@ async function manualRefreshToken(refreshToken: string): Promise<TokenSet> {
   }
 }
 
-// Expose a method to clear the tokenSet
-export function clearXeroTokenSet() {
-  ;(xero as any).tokenSet = undefined // Clear the tokenSet in the xero client
-}
-
 export default xero
