@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import xero, { saveTokenSet } from '@/lib/xeroClient'
 import { TokenSet } from 'xero-node'
+import { currentUser } from '@clerk/nextjs/server'
 
 export async function GET(request: Request) {
   const url = new URL(request.url)
@@ -17,11 +18,13 @@ export async function GET(request: Request) {
     const tokenSet: TokenSet = await xero.apiCallback(url.toString())
     const tenants = await xero.updateTenants(false)
     const tenantId = tenants[0].tenantId
+    const user = await currentUser()
 
-    // Mutate tokenSet directly to add tenantId
-    ;(tokenSet as TokenSet & { tenantId?: string }).tenantId = tenantId
-
-    await saveTokenSet(tokenSet, tenantId)
+    await saveTokenSet(
+      tokenSet,
+      tenantId,
+      user?.emailAddresses[0]?.emailAddress!
+    )
 
     // Redirect to the production URL in prod, localhost in dev
     const redirectUrl =

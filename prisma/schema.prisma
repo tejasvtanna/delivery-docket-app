@@ -17,6 +17,8 @@ model XeroAuth {
   id        Int      @id @default(autoincrement())
   tokenSet  Json     @default("{}")
   tenantId  String?
+  email     String
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 

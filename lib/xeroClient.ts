@@ -1,5 +1,6 @@
 import { XeroClient, TokenSet } from 'xero-node'
 import { PrismaClient } from '@prisma/client'
+import { auth, currentUser } from '@clerk/nextjs/server'
 
 const prisma = new PrismaClient()
 
@@ -15,11 +16,25 @@ const xero = new XeroClient({
 })
 
 export async function xeroInit(): Promise<{ tenantId: string }> {
-  let xeroAuth = await prisma.xeroAuth.findFirst()
+  // Get the authenticated user's email from Clerk
+  const { userId } = await auth()
+  if (!userId) {
+    throw new Error('User not authenticated')
+  }
+  const user = await currentUser()
+  const email = user?.emailAddresses[0]?.emailAddress
+  if (!email) {
+    throw new Error('Email not found')
+  }
+
+  // Fetch xeroAuth record for the authenticated user
+  let xeroAuth = await prisma.xeroAuth.findFirst({
+    where: { email }
+  })
 
   if (!xeroAuth || !xeroAuth.tokenSet || !xeroAuth.tenantId) {
     throw new Error(
-      'No valid Xero tokens found. Please authenticate with Xero.'
+      'No valid Xero tokens found for this user. Please authenticate with Xero.'
     )
   }
 
@@ -61,7 +76,7 @@ export async function xeroInit(): Promise<{ tenantId: string }> {
     // return { tenantId: xeroAuth.tenantId }
 
     const newTokenSet = await manualRefreshToken(tokenSet.refresh_token)
-    await saveTokenSet(newTokenSet, xeroAuth.tenantId)
+    await saveTokenSet(newTokenSet, xeroAuth.tenantId, email)
     xero.setTokenSet(newTokenSet)
     console.log('Manually Refreshed tokenSet:', {
       ...newTokenSet,
@@ -77,7 +92,11 @@ export async function xeroInit(): Promise<{ tenantId: string }> {
   return { tenantId: xeroAuth.tenantId }
 }
 
-export async function saveTokenSet(tokenSet: TokenSet, tenantId: string) {
+export async function saveTokenSet(
+  tokenSet: TokenSet,
+  tenantId: string,
+  email: string
+) {
   const tokenData = {
     access_token: tokenSet.access_token,
     refresh_token: tokenSet.refresh_token,
@@ -86,13 +105,17 @@ export async function saveTokenSet(tokenSet: TokenSet, tenantId: string) {
     scope: tokenSet.scope
   }
 
-  let xeroAuth = await prisma.xeroAuth.findFirst()
+  let xeroAuth = await prisma.xeroAuth.findFirst({
+    where: { email }
+  })
+
   if (xeroAuth) {
     await prisma.xeroAuth.update({
       where: { id: xeroAuth.id },
       data: {
         tokenSet: tokenData,
         tenantId,
+        email,
         updatedAt: new Date()
       }
     })
@@ -100,7 +123,8 @@ export async function saveTokenSet(tokenSet: TokenSet, tenantId: string) {
     await prisma.xeroAuth.create({
       data: {
         tokenSet: tokenData,
-        tenantId
+        tenantId,
+        email
       }
     })
   }
@@ -133,6 +157,11 @@ async function manualRefreshToken(refreshToken: string): Promise<TokenSet> {
     expired: () => false,
     claims: data.claims
   }
+}
+
+// Expose a method to clear the tokenSet
+export function clearXeroTokenSet() {
+  ;(xero as any).tokenSet = undefined // Clear the tokenSet in the xero client
 }
 
 export default xero
