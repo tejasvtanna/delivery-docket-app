@@ -23,7 +23,11 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
           {children}
           <Toaster position='top-center' expand={true} />
-          <ReactQueryDevtools initialIsOpen={false} />
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            position='bottom'
+            buttonPosition='bottom-left'
+          />
         </QueryClientProvider>
       </TooltipProvider>
     </ClerkProvider>
