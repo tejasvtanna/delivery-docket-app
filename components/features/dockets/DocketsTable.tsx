@@ -18,7 +18,7 @@ import { getProducts } from '@/actions/product.actions'
 import { Button } from '@/components/ui/button'
 import { DocketModal } from './DocketModal'
 import { DocketPrintView } from './DocketPrintView'
-import { Pencil, Printer } from 'lucide-react'
+import { Pencil, Printer, Eye } from 'lucide-react'
 import { Dropdown } from '@/components/common/Dropdown'
 import { XeroCustomer } from '@/actions/customer.actions'
 import { InvoiceCreationModal } from './InvoiceCreationModal'
@@ -312,7 +312,11 @@ export const DocketsTable = ({ dockets }: Props) => {
                         size='icon'
                         onClick={() => setEditingDocket(docket)}
                       >
-                        <Pencil className='h-4 w-4' />
+                        {docket.status === DocketStatus.InvoiceGenerated ? (
+                          <Eye className='h-4 w-4' />
+                        ) : (
+                          <Pencil className='h-4 w-4' />
+                        )}
                       </Button>
                       <Button
                         variant='ghost'

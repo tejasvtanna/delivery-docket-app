@@ -151,7 +151,13 @@ export function DocketModal({ onClose, docket }: Props) {
         className='max-h-[87%] overflow-y-auto'
       >
         <DialogHeader>
-          <DialogTitle>{docket ? 'Edit Docket' : 'Add Docket'}</DialogTitle>
+          <DialogTitle>
+            {docket?.status === DocketStatus.Created
+              ? 'Edit Docket'
+              : docket?.status === DocketStatus.InvoiceGenerated
+                ? 'View Docket'
+                : 'Add Docket'}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
@@ -159,7 +165,6 @@ export function DocketModal({ onClose, docket }: Props) {
               <FormField
                 name='date'
                 control={form.control}
-                disabled={docket?.status === DocketStatus.InvoiceGenerated}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='text-gray-700'>Date</FormLabel>
@@ -167,6 +172,9 @@ export function DocketModal({ onClose, docket }: Props) {
                       <Input
                         type='date'
                         value={field.value.toISOString().split('T')[0]}
+                        disabled={
+                          docket?.status === DocketStatus.InvoiceGenerated
+                        }
                         onChange={(e) =>
                           field.onChange(new Date(e.target.value))
                         }
