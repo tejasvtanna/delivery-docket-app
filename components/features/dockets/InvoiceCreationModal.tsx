@@ -53,7 +53,7 @@ export const InvoiceCreationModal = ({
   }
 
   const totalAmount = selectedDockets.reduce(
-    (sum, docket) => sum + docket.price * (docket.firstWeight ?? 1),
+    (sum, docket) => sum + docket.price * (docket.weight ?? 1),
     0
   )
 
@@ -98,9 +98,9 @@ export const InvoiceCreationModal = ({
                     <TableCell className='whitespace-nowrap'>
                       €{docket.price.toFixed(2)}
                     </TableCell>
-                    <TableCell>{docket.firstWeight}</TableCell>
+                    <TableCell>{docket.weight}</TableCell>
                     <TableCell className='whitespace-nowrap'>
-                      €{(docket.price * (docket.firstWeight ?? 1)).toFixed(2)}
+                      €{(docket.price * (docket.weight ?? 1)).toFixed(2)}
                     </TableCell>
                   </TableRow>
                 ))}

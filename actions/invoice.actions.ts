@@ -38,7 +38,7 @@ export async function createXeroInvoice(
     },
     lineItems: selectedDockets.map((docket) => ({
       description: `${docket.product.name} (Docket #${docket.docketNumber})`,
-      quantity: docket.firstWeight ?? 1,
+      quantity: docket.weight ?? 1,
       unitAmount: docket.price,
       accountCode: '10' // Updated to client-specified default
       // taxType: 'OUTPUT' // Assumes 'OUTPUT' is the TaxType for "VAT on Sales (23%)"
