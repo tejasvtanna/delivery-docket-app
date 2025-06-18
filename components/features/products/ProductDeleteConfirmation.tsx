@@ -26,16 +26,15 @@ export function ProductDeleteConfirmation({ product }: Props) {
   const [isPending, startTransition] = useTransition()
 
   const handleDeleteProduct = () => {
-    try {
-      startTransition(async () => {
-        await deleteProduct(product.id)
-      })
-      toast.success('Product deleted successfully')
+    startTransition(async () => {
+      const result = await deleteProduct(product.id)
+      if (result.success) {
+        toast.success(result.message)
+      } else {
+        toast.error(result.message)
+      }
       setIsOpen(false)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error'
-      toast.error(`Failed to delete product: ${message}`)
-    }
+    })
   }
 
   return (

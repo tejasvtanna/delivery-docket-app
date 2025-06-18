@@ -96,10 +96,20 @@ export async function deleteProduct(id: number) {
   try {
     await prisma.product.delete({ where: { id } })
     revalidatePath('/products')
-    return { success: true }
+    return { success: true, message: 'Product deleted successfully' }
   } catch (error) {
-    console.error('deleteProduct error', error)
-    throw error
+    console.error('deleteProduct error: ', error)
+    if (error instanceof Error && 'code' in error && error.code === 'P2003') {
+      return {
+        success: false,
+        message:
+          'Cannot delete this product because it has associated dockets. Please remove the dockets first.'
+      }
+    }
+    return {
+      success: false,
+      message: 'An error occurred while deleting the product.'
+    }
   }
 }
 
