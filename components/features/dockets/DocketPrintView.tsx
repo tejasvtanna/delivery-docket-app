@@ -1,5 +1,7 @@
 import { forwardRef, useId } from 'react'
 import { Docket, Product } from '@prisma/client'
+import { fetchXeroCustomers } from '@/actions/customer.actions'
+import { useQuery } from '@tanstack/react-query'
 
 interface DocketPrintViewProps {
   docket: Docket & { product: Product }
@@ -8,6 +10,13 @@ interface DocketPrintViewProps {
 export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
   ({ docket }, ref) => {
     const uniqueClass = `docket-${useId().replace(/:/g, '')}` // e.g., "docket-Rabc123"
+    const { data: customers } = useQuery({
+      queryKey: ['xero-customers'],
+      queryFn: fetchXeroCustomers
+    })
+    const customer = customers?.find(
+      (customer) => customer.contactID === docket.customerId
+    )
 
     return (
       <div ref={ref} className='mx-auto p-4 font-mono text-sm w-full'>
@@ -80,7 +89,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
               <div>VAT No. IE9844373D</div>
 
               <div className='mt-2'>
-                <div>INVOICE to CUSTOMER: {docket.customerId}</div>
+                <div>INVOICE to CUSTOMER: {customer?.name}</div>
                 <div>DELIVER TO: {docket.deliveryAddress}</div>
                 <div>PRODUCT: {docket.product.name}</div>
                 <div>ORDER NO: {docket.orderNumber}</div>
