@@ -117,46 +117,17 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
               <div className='row-span-2 vc'>
                 EXTRA WATER ADDED AT CUSTOMER'S INSTRUCTIONS
               </div>
-              <div className='row-span-2'></div>
-              <div className='grid grid-cols-[1fr,0.4fr,1fr]'>
-                <span className='vc'>SALE VALUE</span>
-                <span className='vc'>€</span>
-                <span className='vc'>
-                  {(docket.weight ?? 0) * docket.price}
-                </span>
-              </div>
-              <div className='grid grid-cols-[1fr,0.4fr,1fr]'>
-                <span className='vc'>CT/SUR</span>
-                <span className='vc'>€</span>
-                <span className='vc'>0</span>
-              </div>
+              <div className='col-span-2 row-span-2'></div>
 
               <div className='vc'>RESULTING SLUMP:</div>
-              <div></div>
-              <div className='grid grid-cols-[1fr,0.4fr,1fr]'>
-                <span className='vc'>SUB TOTAL</span>
-                <span className='vc'>€</span>
-                <span className='vc'></span>
-              </div>
+              <div className='col-span-2'></div>
 
-              <section className='col-span-2 row-span-2 flex flex-col items-start justify-start p-1 border border-black'>
+              <section className='row-span-2 flex flex-col items-start justify-start p-1 border border-black'>
                 <div>
                   RECEIVED IN GOOD ORDER AND CONDITION BY: {docket.receivedBy}
                 </div>
-                <div></div>
+                <div className='col-span-2'></div>
               </section>
-
-              <div className='grid grid-cols-[1fr,0.4fr,1fr]'>
-                <span className='vc'>VAT</span>
-                <span className='vc'>@</span>
-                <span className='vc'></span>
-              </div>
-
-              <div className='grid grid-cols-[1fr,0.4fr,1fr]'>
-                <span className='vc'>TOTAL</span>
-                <span className='vc'>€</span>
-                <span className='vc'></span>
-              </div>
             </section>
 
             <section className='col-span-3 row-span-7 grid grid-cols-2 grid-rows-[repeat(7,_30px)]'>
