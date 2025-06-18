@@ -79,9 +79,7 @@ export function DocketModal({ onClose, docket }: Props) {
           deliveryAddress: docket.deliveryAddress ?? '',
           inspectedBy: docket.inspectedBy ?? '',
           deliveredBy: docket.deliveredBy ?? '',
-          firstWeight: docket.firstWeight ?? 0,
-          secondWeight: docket.secondWeight ?? 0,
-          thirdWeight: docket.thirdWeight ?? 0,
+          weight: docket.weight ?? 0,
           receivedBy: docket.receivedBy ?? '',
           price: docket.price
         }
@@ -94,9 +92,7 @@ export function DocketModal({ onClose, docket }: Props) {
           deliveryAddress: '',
           inspectedBy: '',
           deliveredBy: '',
-          firstWeight: 0,
-          secondWeight: 0,
-          thirdWeight: 0,
+          weight: 0,
           receivedBy: '',
           price: 0
         }
@@ -327,49 +323,11 @@ export function DocketModal({ onClose, docket }: Props) {
                 )}
               />
               <FormField
-                name='firstWeight'
+                name='weight'
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='text-gray-700'>1st Weight</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='number'
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value))
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name='secondWeight'
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-gray-700'>2nd Weight</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='number'
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value))
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name='thirdWeight'
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-gray-700'>3rd Weight</FormLabel>
+                    <FormLabel className='text-gray-700'>Weight (KG)</FormLabel>
                     <FormControl>
                       <Input
                         type='number'

@@ -43,9 +43,7 @@ export async function createDocket(data: DocketFormData) {
       deliveryAddress: validatedData.deliveryAddress ?? null,
       inspectedBy: validatedData.inspectedBy ?? null,
       deliveredBy: validatedData.deliveredBy ?? null,
-      firstWeight: validatedData.firstWeight ?? null,
-      secondWeight: validatedData.secondWeight ?? null,
-      thirdWeight: validatedData.thirdWeight ?? null,
+      weight: validatedData.weight ?? null,
       receivedBy: validatedData.receivedBy ?? null,
       price: validatedData.price,
       status: DocketStatus.Created
@@ -72,9 +70,7 @@ export async function updateDocket(id: number, data: DocketFormData) {
       deliveryAddress: validatedData.deliveryAddress ?? null,
       inspectedBy: validatedData.inspectedBy ?? null,
       deliveredBy: validatedData.deliveredBy ?? null,
-      firstWeight: validatedData.firstWeight ?? null,
-      secondWeight: validatedData.secondWeight ?? null,
-      thirdWeight: validatedData.thirdWeight ?? null,
+      weight: validatedData.weight ?? null,
       receivedBy: validatedData.receivedBy ?? null,
       price: validatedData.price
     }

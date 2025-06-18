@@ -57,9 +57,7 @@ model Docket {
   deliveryAddress    String?
   inspectedBy        String?
   deliveredBy        String?
-  firstWeight        Float?
-  secondWeight       Float?
-  thirdWeight        Float?
+  weight             Float?
   receivedBy         String?
   price              Float
   status             Int       @default(1)

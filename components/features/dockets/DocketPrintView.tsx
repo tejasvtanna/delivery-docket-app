@@ -47,18 +47,18 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
             <div className='bc'>Radius</div>
             <div className='bc'>Date</div>
             <div className='col-span-2'></div>
-            <div className='bc'>Inspected by</div>
-            <div></div>
-            <div className='bc flex-wrap text-xs'>Re-entered 1st weight</div>
+            <div className='bc'>Weight</div>
+            <div className='bc filed col-span-2'>{docket.weight} KG</div>
 
             {/* ROW-2 */}
             <div className='field bc'>{docket.driverRegNumber}</div>
             <div></div>
             <div className='field bc'>{new Date().toLocaleDateString()}</div>
             <div className='col-span-2'></div>
-            <div className='field bc'>{docket.inspectedBy}</div>
-            <div className='bc filed'>{docket.firstWeight}</div>
-            <div className='bc'>1st weight</div>
+            <div className='bc'>Inspected by</div>
+            <div className='bc flex-wrap text-xs col-span-2'>
+              {docket.inspectedBy}
+            </div>
 
             {/* BALLYORGAN QUARRIES LIMITED */}
             <section className='col-span-5 row-span-8 flex flex-col items-start justify-between p-2 border border-black'>
@@ -78,16 +78,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
               </div>
               <div>Email: ballyorganquarries01@gmail.com</div>
               <div>VAT No. IE9844373D</div>
-              {/* <div className='flex gap-2 justify-between w-96 pb-2 mt-3'>
-                <div>
-                  <div>INVOICE to CUSTOMER</div>
-                  <div>{docket.customerId}</div>
-                </div>
-                <div>
-                  <div>DELIVER TO</div>
-                  <div>{docket.deliveryAddress}</div>
-                </div>
-              </div> */}
+
               <div className='mt-2'>
                 <div>INVOICE to CUSTOMER: {docket.customerId}</div>
                 <div>DELIVER TO: {docket.deliveryAddress}</div>
@@ -97,12 +88,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
             </section>
 
             <div className='bc'>Delivered by</div>
-            <div className='field bc'>{docket.secondWeight}</div>
-            <div className='bc'>2nd weight</div>
-
-            <div className='field bc'>{docket.deliveredBy}</div>
-            <div className='field bc'>{docket.thirdWeight}</div>
-            <div className='bc'>3rd weight</div>
+            <div className='field bc col-span-2'>{docket.deliveredBy}</div>
 
             {/* DELIVERY DOCKET */}
             <div className='col-span-3 row-span-2 text-base font-bold flex items-center justify-center'>
@@ -110,7 +96,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
             </div>
 
             {/* HARMONIZED STANDARD */}
-            <section className='col-span-3 row-span-4 text-base flex flex-col items-center justify-center border border-black'>
+            <section className='col-span-3 row-span-5 text-base flex flex-col items-center justify-center border border-black'>
               <span>Confirms to</span>
               <span>Harmonized European Standard</span>
               <span>IS EN 13043 & S.R 17</span>
@@ -127,7 +113,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
                 <span className='vc'>SALE VALUE</span>
                 <span className='vc'>€</span>
                 <span className='vc'>
-                  {(docket.firstWeight ?? 0) * docket.price}
+                  {(docket.weight ?? 0) * docket.price}
                 </span>
               </div>
               <div className='grid grid-cols-[1fr,0.4fr,1fr]'>

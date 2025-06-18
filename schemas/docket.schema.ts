@@ -13,9 +13,7 @@ export const docketSchema = z.object({
   deliveryAddress: z.string().optional(),
   inspectedBy: z.string().optional(),
   deliveredBy: z.string().optional(),
-  firstWeight: z.number().min(1, { message: 'Enter first weight' }),
-  secondWeight: z.number().optional(),
-  thirdWeight: z.number().optional(),
+  weight: z.number().min(1, { message: 'Enter weight' }),
   receivedBy: z.string().optional(),
   price: z.number({ required_error: 'Price is required' })
 })
