@@ -33,6 +33,7 @@ import { Dropdown } from '@/components/common/Dropdown'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { LoaderCircle } from 'lucide-react'
+import { DocketStatus } from '@/types/docket.types'
 
 interface Props {
   onClose: () => void
@@ -137,6 +138,8 @@ export function DocketModal({ onClose, docket }: Props) {
     })
   }
 
+  // console.debug({ docket })
+
   return (
     <Dialog
       open={true}
@@ -156,6 +159,7 @@ export function DocketModal({ onClose, docket }: Props) {
               <FormField
                 name='date'
                 control={form.control}
+                disabled={docket?.status === DocketStatus.InvoiceGenerated}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='text-gray-700'>Date</FormLabel>
@@ -176,6 +180,7 @@ export function DocketModal({ onClose, docket }: Props) {
               <FormField
                 name='orderNumber'
                 control={form.control}
+                disabled={docket?.status === DocketStatus.InvoiceGenerated}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='text-gray-700'>
@@ -191,6 +196,7 @@ export function DocketModal({ onClose, docket }: Props) {
               <FormField
                 name='driverRegNumber'
                 control={form.control}
+                disabled={docket?.status === DocketStatus.InvoiceGenerated}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='text-gray-700'>
@@ -206,6 +212,7 @@ export function DocketModal({ onClose, docket }: Props) {
               <FormField
                 name='customerId'
                 control={form.control}
+                disabled={docket?.status === DocketStatus.InvoiceGenerated}
                 render={({ field }) => (
                   <FormItem className='col-span-2'>
                     <FormLabel className='text-gray-700'>Customer</FormLabel>
@@ -223,6 +230,9 @@ export function DocketModal({ onClose, docket }: Props) {
                         labelPropName='name'
                         multiSelect={false}
                         className='w-full bg-white shadow-sm text-gray-900'
+                        disabled={
+                          docket?.status === DocketStatus.InvoiceGenerated
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -232,6 +242,7 @@ export function DocketModal({ onClose, docket }: Props) {
               <FormField
                 name='productId'
                 control={form.control}
+                disabled={docket?.status === DocketStatus.InvoiceGenerated}
                 render={({ field }) => (
                   <FormItem className='col-span-2'>
                     <FormLabel className='text-gray-700'>Product</FormLabel>
@@ -249,6 +260,9 @@ export function DocketModal({ onClose, docket }: Props) {
                         labelPropName='name'
                         multiSelect={false}
                         className='w-full bg-white shadow-sm text-gray-900'
+                        disabled={
+                          docket?.status === DocketStatus.InvoiceGenerated
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -285,6 +299,7 @@ export function DocketModal({ onClose, docket }: Props) {
                     type='button'
                     variant='outline'
                     onClick={() => setIsOverrideOpen(true)}
+                    disabled={docket?.status === DocketStatus.InvoiceGenerated}
                   >
                     {overridePrice !== undefined
                       ? 'Edit Override'
@@ -295,6 +310,7 @@ export function DocketModal({ onClose, docket }: Props) {
               <FormField
                 name='inspectedBy'
                 control={form.control}
+                disabled={docket?.status === DocketStatus.InvoiceGenerated}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='text-gray-700'>
@@ -310,13 +326,20 @@ export function DocketModal({ onClose, docket }: Props) {
               <FormField
                 name='deliveredBy'
                 control={form.control}
+                disabled={docket?.status === DocketStatus.InvoiceGenerated}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='text-gray-700'>
                       Delivered By
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} value={field.value ?? ''} />
+                      <Input
+                        {...field}
+                        value={field.value ?? ''}
+                        disabled={
+                          docket?.status === DocketStatus.InvoiceGenerated
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -331,6 +354,9 @@ export function DocketModal({ onClose, docket }: Props) {
                     <FormControl>
                       <Input
                         type='number'
+                        disabled={
+                          docket?.status === DocketStatus.InvoiceGenerated
+                        }
                         value={field.value ?? ''}
                         onChange={(e) =>
                           field.onChange(parseFloat(e.target.value))
@@ -344,6 +370,7 @@ export function DocketModal({ onClose, docket }: Props) {
               <FormField
                 name='receivedBy'
                 control={form.control}
+                disabled={docket?.status === DocketStatus.InvoiceGenerated}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='text-gray-700'>Received By</FormLabel>
@@ -357,6 +384,7 @@ export function DocketModal({ onClose, docket }: Props) {
               <FormField
                 name='deliveryAddress'
                 control={form.control}
+                disabled={docket?.status === DocketStatus.InvoiceGenerated}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='text-gray-700'>
@@ -371,9 +399,15 @@ export function DocketModal({ onClose, docket }: Props) {
               />
             </div>
             <DialogFooter>
-              <Button type='submit' disabled={isPending}>
-                {isPending ? 'Saving...' : 'Save'}
-              </Button>
+              {docket?.status === DocketStatus.InvoiceGenerated ? (
+                <Button type='button' onClick={onClose}>
+                  Close
+                </Button>
+              ) : (
+                <Button type='submit' disabled={isPending}>
+                  {isPending ? 'Saving...' : 'Save'}
+                </Button>
+              )}
             </DialogFooter>
           </form>
         </Form>
