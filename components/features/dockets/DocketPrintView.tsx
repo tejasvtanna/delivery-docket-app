@@ -75,11 +75,12 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
                 BALLYORGAN QUARRIES LIMITED
               </div>
               <div>Kilfinane Co. Limerick.</div>
-              <div className='flex gap-2 justify-between w-96 text-xs'>
+              <div className='flex gap-2 justify-between w-[444px] text-xs'>
                 <div>
                   <div>Telephone: 063 91503</div>
                   <div>Mobile: 086 033 8078</div>
                 </div>
+                <img src='/ce.svg' alt='CE Logo' width='40' height='40' />
                 <div>
                   <div>NSAI 0050 CPR-0449 - IS EN 13242</div>
                   <div>NSAI 0050 CPR-0450 - IS EN 13043</div>
@@ -113,14 +114,9 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
 
             <section className='col-span-5 row-span-7 grid grid-cols-3 grid-rows-[repeat(7,_30px)]'>
               <div className='col-span-3'></div>
-              <div className='col-span-3 vc'>COMMENTS: </div>
-              <div className='row-span-2 vc'>
-                EXTRA WATER ADDED AT CUSTOMER'S INSTRUCTIONS
+              <div className='col-span-3 row-span-4 vertical-align-top p-1'>
+                COMMENTS:{' '}
               </div>
-              <div className='col-span-2 row-span-2'></div>
-
-              <div className='vc'>RESULTING SLUMP:</div>
-              <div className='col-span-2'></div>
 
               <section className='row-span-2 flex flex-col items-start justify-start p-1 border border-black'>
                 <div>
