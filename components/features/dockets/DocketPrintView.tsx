@@ -106,11 +106,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
             </div>
 
             {/* HARMONIZED STANDARD */}
-            <section className='col-span-3 row-span-5 text-base flex flex-col items-center justify-center border border-black'>
-              <span>Confirms to</span>
-              <span>Harmonized European Standard</span>
-              <span>IS EN 13043 & S.R 17</span>
-            </section>
+            <section className='col-span-3 row-span-5 text-base flex flex-col items-center justify-center border border-black'></section>
 
             <section className='col-span-5 row-span-7 grid grid-cols-3 grid-rows-[repeat(7,_30px)]'>
               <div className='col-span-3'></div>
