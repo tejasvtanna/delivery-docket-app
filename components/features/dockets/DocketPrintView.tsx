@@ -179,8 +179,8 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
             style={{
               color: 'grey',
               columns: '4',
-              columnGap: '6px'
-              /* You can also use 'column-fill: balance;' if supported and desired for balancing on the last page */
+              columnGap: '6px',
+              textAlign: 'justify'
             }}
           >
             <ol className='list-decimal ml-6'>
