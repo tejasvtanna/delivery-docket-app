@@ -17,8 +17,7 @@ import { fetchXeroCustomers } from '@/actions/customer.actions'
 import { getProducts } from '@/actions/product.actions'
 import { Button } from '@/components/ui/button'
 import { DocketModal } from './DocketModal'
-import { DocketPrintView } from './DocketPrintView'
-import { Pencil, Printer, Eye } from 'lucide-react'
+import { Pencil, Printer, Eye, Captions } from 'lucide-react'
 import { Dropdown } from '@/components/common/Dropdown'
 import { XeroCustomer } from '@/actions/customer.actions'
 import { InvoiceCreationModal } from './InvoiceCreationModal'
@@ -34,6 +33,8 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@radix-ui/react-popover'
+import { DocketPrintView } from './DocketPrintView'
+import { DocketPrintTestModal } from './DocketPrintTestModal'
 
 interface Props {
   dockets: (Docket & { product: Product })[]
@@ -77,6 +78,9 @@ export const DocketsTable = ({ dockets }: Props) => {
     (Docket & { product: Product }) | null
   >(null)
   const [printingDocket, setPrintingDocket] = useState<
+    (Docket & { product: Product }) | null
+  >(null)
+  const [testingDocket, setTestingDocket] = useState<
     (Docket & { product: Product }) | null
   >(null)
   const [selectedDockets, setSelectedDockets] = useState<Docket[]>([])
@@ -318,6 +322,7 @@ export const DocketsTable = ({ dockets }: Props) => {
                           <Pencil className='h-4 w-4' />
                         )}
                       </Button>
+
                       <Button
                         variant='ghost'
                         size='icon'
@@ -328,6 +333,13 @@ export const DocketsTable = ({ dockets }: Props) => {
                       >
                         <Printer className='h-4 w-4' />
                       </Button>
+                      {/* <Button
+                        variant='ghost'
+                        size='icon'
+                        onClick={() => setTestingDocket(docket)}
+                      >
+                        <Captions className='h-4 w-4' />
+                      </Button> */}
                     </TableCell>
                   </TableRow>
                 ))
@@ -350,10 +362,19 @@ export const DocketsTable = ({ dockets }: Props) => {
           onClose={() => setEditingDocket(null)}
         />
       )}
+
       {printingDocket && (
         <div className='hidden'>
           <DocketPrintView docket={printingDocket} ref={contentRef} />
         </div>
+      )}
+
+      {testingDocket && (
+        <DocketPrintTestModal
+          isOpen={true}
+          onOpenChange={() => setTestingDocket(null)}
+          docket={testingDocket}
+        />
       )}
 
       {isInvoiceModalOpen && (
