@@ -154,10 +154,9 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
 
         <div
           data-page-2
-          className='flex flex-col leading-tight'
+          className='flex flex-col' // Removed leading-tight here as it's better on the content
           style={{
             fontFamily: 'arial narrow',
-            // lineHeight: '1.5',
             pageBreakBefore: 'always',
             breakInside: 'avoid'
           }}
@@ -166,7 +165,8 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
             CONDITIONS OF SUPPLY OF GOODS
           </div>
 
-          <div className='text-sm mt-1'>
+          <div className='text-sm mt-1 leading-tight'>
+            {/* Applied leading-tight here to the introductory paragraph */}
             For the purposes of these conditions, 'customer' means the person or
             company ordering the goods on the reverse hereof; 'Ballyorgan
             Quarries' means Ballyorgan Quarries Limited; 'goods' means the goods
@@ -175,12 +175,19 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
           </div>
 
           <div
-            className='text-sm leading-tight mt-1'
+            className='text-xs leading-tight mt-1' // Changed to text-xs and kept leading-tight
             style={{
               color: 'grey',
               columns: '4',
-              columnGap: '6px',
-              textAlign: 'justify'
+              columnGap: '4px', // Reduced column gap slightly more
+              textAlign: 'justify',
+              // Added print-specific properties for better control
+              orphans: 1, // Prevents single lines from being left alone at the bottom of a column/page
+              widows: 1 // Prevents single lines from being left alone at the top of a column/page
+              // Potentially useful, but depends on font support and visual appeal.
+              // If "Arial Narrow" doesn't have a distinct condensed face, this might not do much
+              // or could make it look pixelated if forced. Use with caution.
+              // fontStretch: 'extra-condensed',
             }}
           >
             <ol className='list-decimal ml-6'>
