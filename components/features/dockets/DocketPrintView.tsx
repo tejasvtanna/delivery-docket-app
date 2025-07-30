@@ -154,10 +154,10 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
 
         <div
           data-page-2
-          className='flex flex-col'
+          className='flex flex-col leading-tight'
           style={{
             fontFamily: 'arial narrow',
-            lineHeight: '1.5',
+            // lineHeight: '1.5',
             pageBreakBefore: 'always',
             breakInside: 'avoid'
           }}
@@ -166,7 +166,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
             CONDITIONS OF SUPPLY OF GOODS
           </div>
 
-          <div className='text-sm mt-1'>
+          <div className='text-sm mt-2'>
             For the purposes of these conditions, 'customer' means the person or
             company ordering the goods on the reverse hereof; 'Ballyorgan
             Quarries' means Ballyorgan Quarries Limited; 'goods' means the goods
@@ -175,7 +175,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
           </div>
 
           <div
-            className='text-sm'
+            className='text-sm leading-tight mt-4'
             style={{
               color: 'grey',
               columns: '4',
@@ -185,12 +185,11 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
           >
             <ol className='list-decimal ml-6'>
               <li>
-                Where Ballyorgan Quarries delivers the goods using its own
-                transport to a location off hard road or Ballyorgan Quarries
-                uses a third party to deliver the goods at the time the goods
-                are received by the said third party or if the customer
-                wrongfully fails to take delivery of the goods, the time when
-                Ballyorgan Quarries has tendered delivery of the goods
+                Subject to any special terms agreed in writing between the
+                customer and Ballyorgan Quarries, Ballyorgan Quarries may
+                invoice the customer for he price of the good on or tat any time
+                after delivery of the goods has taken place or is deemed to have
+                taken place.
               </li>
               <li>
                 The customer shall pay the price of the goods on delivery or
@@ -212,19 +211,15 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
                     appropriation by the customer) and
                   </li>
                   <li>
-                    charge the customer interest (both before and after
-                    judgement) on the amount unpaid at the rate of 1.5% per
-                    month, until payment in full is made (a part of month being
-                    treated as a full month for the purpose of calculating
-                    interest);
-                  </li>
-                  <li>
-                    recover legal fees and other costs incurred in the recovery
-                    of overdue debts and
-                  </li>
-                  <li>
-                    all bank charges incurred by Ballyorgan Quarries due to
-                    cheques offered in payment which are dishonoured.
+                    charge the customer: <br />
+                    (i) interest (both before and after judgement) on the amount
+                    unpaid at the rate of 1.5% per month, until payment in full
+                    is made (a part of month being treated as a full month for
+                    the purpose of calculating interest); <br />
+                    (ii) all legal fees and other costs incurred in the recovery
+                    of overdue debts and <br />
+                    (iii) all bank charges incurred by Ballyorgan Quarries due
+                    to cheques offered in payment which are dishonoured.
                   </li>
                 </ol>
               </li>
@@ -267,8 +262,16 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
               <li>
                 Risk or damage to or loss of the goods shall become the
                 customer's responsibility in the case of goods to be delivered
-                otherwise that at Ballyorgan Quarries premises or at the time of
-                delivery or place or is deemed to have taken place:
+                otherwise that at Ballyorgan Quarries premises <br />
+                (i) where Ballyorgan Quarries delivers the goods using its own
+                transport to a location off hard road or <br />
+                (ii) at the time of delivery or <br />
+                (iii) where Ballyorgan Quarries uses a third party to deliver
+                the goods at the time the goods are received by the said third
+                party or <br />
+                (i) if the customer wrongfully fails to take delivery of the
+                goods, the time when Ballyorgan Quarries has tendered delivery
+                of the goods
               </li>
               <li>
                 Ownership in the goods shall not pass to the customer until
