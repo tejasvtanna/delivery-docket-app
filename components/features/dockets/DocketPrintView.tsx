@@ -154,7 +154,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
 
         <div
           data-page-2
-          className='flex flex-col' // Removed leading-tight here as it's better on the content
+          className='flex flex-col'
           style={{
             fontFamily: 'arial narrow',
             pageBreakBefore: 'always',
@@ -165,8 +165,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
             CONDITIONS OF SUPPLY OF GOODS
           </div>
 
-          <div className='text-sm mt-1 leading-tight'>
-            {/* Applied leading-tight here to the introductory paragraph */}
+          <div className='text-sm mt-1' style={{ lineHeight: '1.3' }}>
             For the purposes of these conditions, 'customer' means the person or
             company ordering the goods on the reverse hereof; 'Ballyorgan
             Quarries' means Ballyorgan Quarries Limited; 'goods' means the goods
@@ -175,19 +174,15 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
           </div>
 
           <div
-            className='text-xs leading-tight mt-1' // Changed to text-xs and kept leading-tight
+            className='text-sm mt-1' // Reverted to text-sm
             style={{
               color: 'grey',
               columns: '4',
-              columnGap: '4px', // Reduced column gap slightly more
+              columnGap: '4px',
               textAlign: 'justify',
-              // Added print-specific properties for better control
-              orphans: 1, // Prevents single lines from being left alone at the bottom of a column/page
-              widows: 1 // Prevents single lines from being left alone at the top of a column/page
-              // Potentially useful, but depends on font support and visual appeal.
-              // If "Arial Narrow" doesn't have a distinct condensed face, this might not do much
-              // or could make it look pixelated if forced. Use with caution.
-              // fontStretch: 'extra-condensed',
+              lineHeight: '1.3', // Adjusted line-height directly
+              orphans: 1,
+              widows: 1
             }}
           >
             <ol className='list-decimal ml-6'>
@@ -205,7 +200,10 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
                 shall be of the essence of the contract herein. If the customer
                 fails to make any payment on the due date then, without limiting
                 any other right or remedy available to Ballyorgan Quarries may:
-                <ol className='ml-6' style={{ listStyleType: 'lower-alpha' }}>
+                <ol
+                  className='ml-6'
+                  style={{ listStyleType: 'lower-alpha', lineHeight: '1.2' }}
+                >
                   <li>
                     cancel the contract herein or suspend any further deliveries
                     to the customer
