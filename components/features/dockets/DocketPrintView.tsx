@@ -274,7 +274,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
                 (iii) where Ballyorgan Quarries uses a third party to deliver
                 the goods at the time the goods are received by the said third
                 party or <br />
-                (i) if the customer wrongfully fails to take delivery of the
+                (iv) if the customer wrongfully fails to take delivery of the
                 goods, the time when Ballyorgan Quarries has tendered delivery
                 of the goods
               </li>
