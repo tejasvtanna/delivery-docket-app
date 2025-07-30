@@ -162,11 +162,11 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
             breakInside: 'avoid'
           }}
         >
-          <div className='text-center font-bold text-lg mt-1'>
+          <div className='text-center font-bold text-lg'>
             CONDITIONS OF SUPPLY OF GOODS
           </div>
 
-          <div className='text-sm mt-2'>
+          <div className='text-sm mt-1'>
             For the purposes of these conditions, 'customer' means the person or
             company ordering the goods on the reverse hereof; 'Ballyorgan
             Quarries' means Ballyorgan Quarries Limited; 'goods' means the goods
@@ -175,7 +175,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
           </div>
 
           <div
-            className='text-sm leading-tight mt-4'
+            className='text-sm leading-tight mt-1'
             style={{
               color: 'grey',
               columns: '4',
