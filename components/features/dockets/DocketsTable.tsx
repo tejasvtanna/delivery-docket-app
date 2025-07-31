@@ -89,7 +89,7 @@ export const DocketsTable = ({ dockets }: Props) => {
   const filteredDockets = dockets.filter((docket) => {
     const matchesSearch =
       !searchTerm ||
-      docket.docketNumber.toString() === searchTerm ||
+      docket.docketNumber.toUpperCase() === searchTerm.toUpperCase() ||
       docket.orderNumber === searchTerm
 
     const matchesCustomer =
