@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
-import { Docket, Product } from '@prisma/client'
+import { Docket, DocketNumberType, Prisma, Product } from '@prisma/client'
 import { docketSchema, DocketFormData } from '@/schemas/docket.schema'
 import { DocketStatus } from '@/types/docket.types'
 
@@ -28,10 +28,34 @@ export async function getDocket(id: number): Promise<Docket | null> {
   })
 }
 
-// Create a new docket
 export async function createDocket(data: DocketFormData) {
   // Validate input
   const validatedData = docketSchema.parse(data)
+
+  let docketNumber: string
+  const docketNumberType: DocketNumberType = validatedData.isDocketNumberAuto
+    ? 'auto'
+    : 'manual'
+
+  if (validatedData.isDocketNumberAuto) {
+    // Perform the MAX calculation directly in the database for efficiency.
+    const result: { max: number | null }[] = await prisma.$queryRaw(
+      Prisma.sql`SELECT MAX(CAST("docketNumber" AS INTEGER)) as max FROM "Docket" WHERE "docketNumber" ~ '^[0-9]+$'`
+    )
+    const maxNumber = result[0]?.max ?? 0
+    docketNumber = (maxNumber + 1).toString()
+  } else {
+    // Logic for handling manual docket number
+    docketNumber = validatedData.docketNumber!
+
+    const existingDocket = await prisma.docket.findUnique({
+      where: { docketNumber }
+    })
+
+    if (existingDocket) {
+      throw new Error('This docket number is already in use.')
+    }
+  }
 
   const docket = await prisma.docket.create({
     data: {
@@ -46,7 +70,9 @@ export async function createDocket(data: DocketFormData) {
       weight: validatedData.weight ?? null,
       receivedBy: validatedData.receivedBy ?? null,
       price: validatedData.price,
-      status: DocketStatus.Created
+      status: DocketStatus.Created,
+      docketNumber, // Add the generated/validated docket number
+      docketNumberType // Add the type
     }
   })
   revalidatePath('/dockets')

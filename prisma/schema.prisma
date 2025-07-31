@@ -1,8 +1,7 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+enum DocketNumberType {
+  auto
+  manual
+}
 
 generator client {
   provider = "prisma-client-js"
@@ -17,55 +16,57 @@ model XeroAuth {
   id        Int      @id @default(autoincrement())
   tokenSet  Json     @default("{}")
   tenantId  String?
-  email     String
-  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  email     String
 }
 
 model Product {
   id        Int            @id @default(autoincrement())
   name      String         @unique
   basePrice Float
-  prices    ProductPrice[] // Customer-specific prices
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @default(now()) @updatedAt
   dockets   Docket[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  prices    ProductPrice[]
 }
 
 model ProductPrice {
-  id         Int     @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   productId  Int
-  customerId String // ID from Xero API
+  customerId String
   price      Float
-  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  @@unique([productId, customerId]) // One price per product-customer pair
+  @@unique([productId, customerId])
 }
 
 model Docket {
   id                 Int       @id @default(autoincrement())
-  date               DateTime // Date field
+  date               DateTime
   driverRegNumber    String?
   customerId         String
   productId          Int
   orderNumber        String
-  docketNumber       Int       @default(autoincrement())
   deliveryAddress    String?
   inspectedBy        String?
   deliveredBy        String?
-  weight             Float?
   receivedBy         String?
+  createdAt          DateTime  @default(now())
   price              Float
   status             Int       @default(1)
-  invoiceGeneratedOn DateTime?
+  updatedAt          DateTime  @updatedAt
+
+    // --- CHANGES START HERE ---
+  // docketNumber       Int       @default(autoincrement())
+  docketNumber       String    @unique // Changed from Int @default(autoincrement())
+  docketNumberType   DocketNumberType @default(manual) // New field
+  
+  // --- CHANGES END HERE ---
   invoiceGeneratedBy String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  invoiceGeneratedOn DateTime?
+  weight             Float?
+  product            Product   @relation(fields: [productId], references: [id])
 }

@@ -34,6 +34,7 @@ import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { LoaderCircle } from 'lucide-react'
 import { DocketStatus } from '@/types/docket.types'
+import { Checkbox } from '@/components/ui/checkbox'
 
 interface Props {
   onClose: () => void
@@ -72,32 +73,39 @@ export function DocketModal({ onClose, docket }: Props) {
     resolver: zodResolver(docketSchema),
     defaultValues: docket
       ? {
-          date: new Date(docket.date),
-          driverRegNumber: docket.driverRegNumber ?? '',
           customerId: docket.customerId,
           productId: docket.productId,
+          date: new Date(docket.date),
+          docketNumber: docket.docketNumber ?? '',
+          isDocketNumberAuto: false,
           orderNumber: docket.orderNumber,
+          driverRegNumber: docket.driverRegNumber ?? '',
           deliveryAddress: docket.deliveryAddress ?? '',
           inspectedBy: docket.inspectedBy ?? '',
           deliveredBy: docket.deliveredBy ?? '',
-          weight: docket.weight ?? 0,
+          weight: docket.weight ?? null,
           receivedBy: docket.receivedBy ?? '',
           price: docket.price
         }
       : {
           date: new Date(),
+          docketNumber: '',
+          isDocketNumberAuto: true,
+          orderNumber: '',
           driverRegNumber: '',
           customerId: '',
           productId: 0,
-          orderNumber: '',
           deliveryAddress: '',
           inspectedBy: '',
           deliveredBy: '',
-          weight: 0,
+          weight: null,
           receivedBy: '',
           price: 0
         }
   })
+
+  const isDocketNumberAuto = form.watch('isDocketNumberAuto')
+  const isEditMode = !!docket
 
   useEffect(() => {
     if (!docket) return
@@ -133,7 +141,10 @@ export function DocketModal({ onClose, docket }: Props) {
         onClose()
         form.reset()
       } catch (error) {
-        toast(`Failed to ${docket ? 'update' : 'create'} docket`)
+        console.error('docket create/update error', error)
+        toast.error(
+          `Failed to ${docket ? 'update' : 'create'} docket. ${error}`
+        )
       }
     })
   }
@@ -185,6 +196,56 @@ export function DocketModal({ onClose, docket }: Props) {
                 )}
               />
               <div />
+
+              {/* START: New Docket Number Fields */}
+              <FormField
+                name='docketNumber'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-gray-700'>
+                      Docket Number
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        value={field.value ?? ''}
+                        disabled={isDocketNumberAuto || isEditMode}
+                        placeholder={
+                          isDocketNumberAuto ? 'Auto-generated' : 'Enter number'
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name='isDocketNumberAuto'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className='flex items-end pb-2'>
+                    <FormControl>
+                      <div className='flex items-center space-x-2'>
+                        <Checkbox
+                          id='isDocketNumberAuto'
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={isEditMode}
+                        />
+                        <label
+                          htmlFor='isDocketNumberAuto'
+                          className='text-sm font-medium text-gray-700'
+                        >
+                          Auto Increment
+                        </label>
+                      </div>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              {/* END: New Docket Number Fields */}
+
               <FormField
                 name='orderNumber'
                 control={form.control}
