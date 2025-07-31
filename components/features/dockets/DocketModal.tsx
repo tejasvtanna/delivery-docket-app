@@ -178,7 +178,9 @@ export function DocketModal({ onClose, docket }: Props) {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='text-gray-700'>Date</FormLabel>
+                    <FormLabel className='text-gray-700'>
+                      Date <span className='text-red-500'>*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type='date'
@@ -205,6 +207,9 @@ export function DocketModal({ onClose, docket }: Props) {
                   <FormItem>
                     <FormLabel className='text-gray-700'>
                       Docket Number
+                      {!isDocketNumberAuto && (
+                        <span className='text-red-500'>*</span>
+                      )}
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -253,7 +258,7 @@ export function DocketModal({ onClose, docket }: Props) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='text-gray-700'>
-                      Order Number
+                      Order Number <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input {...field} value={field.value ?? ''} />
@@ -284,7 +289,9 @@ export function DocketModal({ onClose, docket }: Props) {
                 disabled={docket?.status === DocketStatus.InvoiceGenerated}
                 render={({ field }) => (
                   <FormItem className='col-span-2'>
-                    <FormLabel className='text-gray-700'>Customer</FormLabel>
+                    <FormLabel className='text-gray-700'>
+                      Customer <span className='text-red-500'>*</span>
+                    </FormLabel>
                     <FormControl>
                       <Dropdown
                         placeholder='Select a customer'
@@ -314,7 +321,9 @@ export function DocketModal({ onClose, docket }: Props) {
                 disabled={docket?.status === DocketStatus.InvoiceGenerated}
                 render={({ field }) => (
                   <FormItem className='col-span-2'>
-                    <FormLabel className='text-gray-700'>Product</FormLabel>
+                    <FormLabel className='text-gray-700'>
+                      Product <span className='text-red-500'>*</span>
+                    </FormLabel>
                     <FormControl>
                       <Dropdown
                         placeholder='Select a product'
@@ -419,7 +428,9 @@ export function DocketModal({ onClose, docket }: Props) {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='text-gray-700'>Weight (KG)</FormLabel>
+                    <FormLabel className='text-gray-700'>
+                      Weight (KG) <span className='text-red-500'>*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type='number'
