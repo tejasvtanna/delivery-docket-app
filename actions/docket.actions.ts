@@ -105,14 +105,19 @@ export async function updateDocket(id: number, data: DocketFormData) {
   return docket
 }
 
-// Delete a docket
-export async function deleteDocket(id: number) {
+export async function deleteDockets(ids: number[]) {
   try {
-    await prisma.docket.delete({ where: { id } })
+    await prisma.docket.deleteMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    })
     revalidatePath('/dockets')
     return { success: true }
   } catch (error) {
-    console.error('deleteDocket error', error)
+    console.error('deleteDockets error', error)
     throw error
   }
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useMemo } from 'react'
+import { useRef, useState, useMemo, useTransition } from 'react'
 import { useReactToPrint } from 'react-to-print'
 import { Docket, Product } from '@prisma/client'
 import { Input } from '@/components/ui/input'
@@ -17,7 +17,7 @@ import { fetchXeroCustomers } from '@/actions/customer.actions'
 import { getProducts } from '@/actions/product.actions'
 import { Button } from '@/components/ui/button'
 import { DocketModal } from './DocketModal'
-import { Pencil, Printer, Eye, Captions } from 'lucide-react'
+import { Pencil, Printer, Eye, Trash } from 'lucide-react'
 import { Dropdown } from '@/components/common/Dropdown'
 import { XeroCustomer } from '@/actions/customer.actions'
 import { InvoiceCreationModal } from './InvoiceCreationModal'
@@ -35,6 +35,9 @@ import {
 } from '@radix-ui/react-popover'
 import { DocketPrintView } from './DocketPrintView'
 import { DocketPrintTestModal } from './DocketPrintTestModal'
+import { ConfirmationModal } from '@/components/common/ConfirmationModal'
+import { toast } from 'sonner'
+import { deleteDockets } from '@/actions/docket.actions'
 
 interface Props {
   dockets: (Docket & { product: Product })[]
@@ -55,6 +58,7 @@ interface DocketStatusOption {
 export const DocketsTable = ({ dockets }: Props) => {
   const contentRef = useRef<HTMLDivElement>(null)
   const queryClient = useQueryClient()
+  const [isPending, startTransition] = useTransition()
 
   const { data: allCustomers = [] } = useQuery({
     queryKey: ['xero-customers'],
@@ -85,6 +89,8 @@ export const DocketsTable = ({ dockets }: Props) => {
   >(null)
   const [selectedDockets, setSelectedDockets] = useState<Docket[]>([])
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false)
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+    useState(false)
 
   const filteredDockets = dockets.filter((docket) => {
     const matchesSearch =
@@ -121,6 +127,20 @@ export const DocketsTable = ({ dockets }: Props) => {
     }
   }
 
+  const handleDeleteDocket = () => {
+    startTransition(async () => {
+      const result = await deleteDockets(
+        selectedDockets.map((docket) => docket.id)
+      )
+      if (result.success) {
+        toast.success('Docket(s) deleted successfully')
+      } else {
+        toast.error('Something went wrong, please try again later')
+      }
+      setIsDeleteConfirmationOpen(false)
+    })
+  }
+
   // Function to format the status display
   const formatStatus = (status: DocketStatus) => {
     if (status === DocketStatus.InvoiceGenerated) {
@@ -129,7 +149,7 @@ export const DocketsTable = ({ dockets }: Props) => {
     return DocketStatus[status]
   }
 
-  const tooltipContent = useMemo(() => {
+  const createTooltipContent = useMemo(() => {
     if (!selectedDockets.length) return 'Select a docket'
     if (
       selectedDockets.some(
@@ -139,6 +159,18 @@ export const DocketsTable = ({ dockets }: Props) => {
       return 'Invoice already generated for the selected docket(s)'
     }
     return 'Create invoice'
+  }, [selectedDockets])
+
+  const deleteTooltipContent = useMemo(() => {
+    if (!selectedDockets.length) return 'Select a docket'
+    if (
+      selectedDockets.some(
+        (docket) => docket.status === DocketStatus.InvoiceGenerated
+      )
+    ) {
+      return 'Invoice already generated for the selected docket(s)'
+    }
+    return 'Delete docket(s)'
   }, [selectedDockets])
 
   return (
@@ -152,7 +184,8 @@ export const DocketsTable = ({ dockets }: Props) => {
             <h1 className='text-2xl font-bold'>
               Dockets ({filteredDockets.length})
             </h1>
-            <div className='space-x-2'>
+
+            <div className='flex items-center gap-2'>
               <Button onClick={() => setIsAdding(true)}>Add Docket</Button>
               <TooltipProvider>
                 <Tooltip>
@@ -173,7 +206,33 @@ export const DocketsTable = ({ dockets }: Props) => {
                     </span>
                   </TooltipTrigger>
                   <TooltipContent className='bg-gray-800 text-white text-sm rounded-md px-2 py-1 shadow-lg'>
-                    {tooltipContent}
+                    {createTooltipContent}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <Button
+                        variant='link'
+                        onClick={() => setIsDeleteConfirmationOpen(true)}
+                        disabled={
+                          selectedDockets.length === 0 ||
+                          selectedDockets.some(
+                            (docket) =>
+                              docket.status === DocketStatus.InvoiceGenerated
+                          )
+                        }
+                        className='border-2 border-solid'
+                      >
+                        <Trash className='h-4 w-4' />
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent className='bg-gray-800 text-white text-sm rounded-md px-2 py-1 shadow-lg'>
+                    {deleteTooltipContent}
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -389,6 +448,25 @@ export const DocketsTable = ({ dockets }: Props) => {
             setIsInvoiceModalOpen(false)
             queryClient.invalidateQueries({ queryKey: ['dockets'] })
           }}
+        />
+      )}
+
+      {isDeleteConfirmationOpen && (
+        <ConfirmationModal
+          open={isDeleteConfirmationOpen}
+          onOpenChange={setIsDeleteConfirmationOpen}
+          title={`Delete ${selectedDockets.length} Docket`}
+          description={`Are you sure you want to delete ${selectedDockets.length} docket(s)? This action can't be undone.`}
+          primaryButton={
+            <Button onClick={handleDeleteDocket} disabled={isPending}>
+              {isPending ? 'Deleting...' : 'Delete'}
+            </Button>
+          }
+          secondaryButton={
+            <Button onClick={() => setIsDeleteConfirmationOpen(false)}>
+              Cancel
+            </Button>
+          }
         />
       )}
     </>
