@@ -4,13 +4,6 @@ import { useState } from 'react'
 import { Docket, Product } from '@prisma/client'
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog'
-import {
   Table,
   TableBody,
   TableCell,
@@ -19,6 +12,7 @@ import {
   TableRow
 } from '@/components/ui/table'
 import { createXeroInvoice } from '@/actions/invoice.actions'
+import { Modal } from '@/components/ui/Modal'
 
 interface InvoiceCreationModalProps {
   selectedDockets: (Docket & { product: Product })[]
@@ -58,12 +52,10 @@ export const InvoiceCreationModal = ({
   )
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className='max-w-4xl w-full'>
-        <DialogHeader>
-          <DialogTitle>Create Invoice for following Dockets</DialogTitle>
-        </DialogHeader>
+    <Modal open={true} onOpenChange={onClose} size='lg'>
+      <Modal.Header title='Create Invoice for following Dockets' />
 
+      <Modal.Content className='max-w-4xl w-full'>
         <div className='space-y-4'>
           <div className='overflow-x-auto'>
             <Table className='table-auto'>
@@ -117,16 +109,24 @@ export const InvoiceCreationModal = ({
           </div>
           {error && <p className='text-red-500'>{error}</p>}
         </div>
+      </Modal.Content>
 
-        <DialogFooter>
+      <Modal.Footer
+        primaryButton={
+          <Button
+            onClick={handleCreateXeroInvoice}
+            disabled={isCreating}
+            type='button'
+          >
+            {isCreating ? 'Creating...' : 'Create Invoice'}
+          </Button>
+        }
+        secondaryButton={
           <Button variant='outline' onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={handleCreateXeroInvoice} disabled={isCreating}>
-            {isCreating ? 'Creating...' : 'Create Invoice'}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        }
+      />
+    </Modal>
   )
 }
