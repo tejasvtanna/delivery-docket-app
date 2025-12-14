@@ -37,7 +37,7 @@ export async function createXeroInvoice(
       contactID: selectedDockets[0].customerId
     },
     lineItems: selectedDockets.map((docket) => ({
-      description: `${docket.product.name} (Docket #${docket.docketNumber})`,
+      description: `${docket.product.name} (Docket #${docket.docketNumber} Delivery Date: ${docket.date.toLocaleDateString('en-IE')})`,
       quantity: docket.weight ?? 1,
       unitAmount: docket.price,
       accountCode: '10' // Updated to client-specified default
