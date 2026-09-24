@@ -151,6 +151,9 @@ export const DocketsTable = ({ dockets }: Props) => {
 
   const createTooltipContent = useMemo(() => {
     if (!selectedDockets.length) return 'Select a docket'
+    if (selectedDockets.length > 100) {
+      return 'Maximum 100 dockets can be selected for invoice generation'
+    }
     if (
       selectedDockets.some(
         (docket) => docket.status === DocketStatus.InvoiceGenerated
@@ -195,6 +198,7 @@ export const DocketsTable = ({ dockets }: Props) => {
                         onClick={handleCreateInvoice}
                         disabled={
                           selectedDockets.length === 0 ||
+                          selectedDockets.length > 100 ||
                           selectedDockets.some(
                             (docket) =>
                               docket.status === DocketStatus.InvoiceGenerated
