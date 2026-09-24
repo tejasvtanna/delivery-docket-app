@@ -79,8 +79,8 @@ export async function xeroInit(): Promise<{ tenantId: string }> {
     await saveTokenSet(newTokenSet, xeroAuth.tenantId, email)
     xero.setTokenSet(newTokenSet)
     console.log('Manually Refreshed tokenSet:', {
-      ...newTokenSet,
-      tenantId: xeroAuth.tenantId
+      tenantId: xeroAuth.tenantId,
+      expires_at: new Date(newTokenSet.expires_at! * 1000)
     })
     return { tenantId: xeroAuth.tenantId }
   }
