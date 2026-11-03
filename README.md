@@ -1,64 +1,41 @@
-<div align="center"><strong>Next.js 15 Admin Dashboard Template</strong></div>
-<div align="center">Built with the Next.js App Router</div>
-<br />
-<div align="center">
-<a href="https://next-admin-dash.vercel.app/">Demo</a>
-<span> · </span>
-<a href="https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs">Clone & Deploy</a>
-<span>
-</div>
+# Delivery Docket App
 
-## Overview
+A modern Next.js application to create, print, and track delivery dockets with automated customer pricing, driver allocation, and seamless export to Xero for invoicing.
 
-This is a starter template using the following stack:
+## Features
 
-- Framework - [Next.js (App Router)](https://nextjs.org)
-- Language - [TypeScript](https://www.typescriptlang.org)
-- Auth - [Auth.js](https://authjs.dev)
-- Database - [Postgres](https://vercel.com/postgres)
-- Deployment - [Vercel](https://vercel.com/docs/concepts/next.js/overview)
-- Styling - [Tailwind CSS](https://tailwindcss.com)
-- Components - [Shadcn UI](https://ui.shadcn.com/)
-- Analytics - [Vercel Analytics](https://vercel.com/analytics)
-- Formatting - [Prettier](https://prettier.io)
-
-This template uses the new Next.js App Router. This includes support for enhanced layouts, colocation of components, tests, and styles, component-level data fetching, and more.
+- **Delivery Docket Management:** Create, view, search, and delete delivery dockets.
+- **Printable Dockets:** Print formatted PDF delivery dockets with customizable terms and conditions.
+- **Xero Integration:** One-click batch invoice generation directly into Xero without duplicate billing.
+- **Customer & Product Management:** Maintain customer records, customized price overrides, and product inventory.
+- **Modern Stack:** Built with Next.js (App Router), TypeScript, Tailwind CSS, Prisma ORM, and PostgreSQL.
 
 ## Getting Started
 
-During the deployment, Vercel will prompt you to create a new Postgres database. This will add the necessary environment variables to your project.
+1. Clone repository:
+   ```bash
+   git clone https://github.com/tejasvtanna/delivery-docket-app.git
+   cd delivery-docket-app
+   ```
 
-Inside the Vercel Postgres dashboard, create a table based on the schema defined in this repository.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-```
-CREATE TYPE status AS ENUM ('active', 'inactive', 'archived');
+3. Set up environment variables in `.env`:
+   ```env
+   DATABASE_URL="your-postgres-connection-string"
+   XERO_CLIENT_ID="your-xero-client-id"
+   XERO_CLIENT_SECRET="your-xero-client-secret"
+   XERO_REDIRECT_URI="http://localhost:3000/api/xero-callback"
+   ```
 
-CREATE TABLE products (
-  id SERIAL PRIMARY KEY,
-  image_url TEXT NOT NULL,
-  name TEXT NOT NULL,
-  status status NOT NULL,
-  price NUMERIC(10, 2) NOT NULL,
-  stock INTEGER NOT NULL,
-  available_at TIMESTAMP NOT NULL
-);
-```
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-Then, uncomment `app/api/seed.ts` and hit `http://localhost:3000/api/seed` to seed the database with products.
+## License
 
-Next, copy the `.env.example` file to `.env` and update the values. Follow the instructions in the `.env.example` file to set up your GitHub OAuth application.
-
-```bash
-npm i -g vercel
-vercel link
-vercel env pull
-```
-
-Finally, run the following commands to start the development server:
-
-```
-pnpm install
-pnpm dev
-```
-
-You should now be able to access the application at http://localhost:3000.
+[MIT](LICENSE.md)

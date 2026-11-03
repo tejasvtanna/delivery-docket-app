@@ -73,25 +73,25 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
                 {docket.inspectedBy}
               </div>
 
-              {/* BALLYORGAN QUARRIES LIMITED */}
+              {/* COMPANY HEADER */}
               <section className='col-span-5 row-span-8 flex flex-col items-start justify-between p-2 border border-black'>
                 <div className='text-lg font-bold'>
-                  BALLYORGAN QUARRIES LIMITED
+                  ACME LOGISTICS & SUPPLY LTD
                 </div>
-                <div>Kilfinane Co. Limerick.</div>
+                <div>Industrial Estate, Sample Road, Dublin</div>
                 <div className='flex gap-2 justify-between w-[444px] text-xs'>
                   <div>
-                    <div>Telephone: 063 91503</div>
-                    <div>Mobile: 086 033 8078</div>
+                    <div>Telephone: +353 1 234 5678</div>
+                    <div>Mobile: +353 87 000 0000</div>
                   </div>
                   <img src='/ce.svg' alt='CE Logo' width='40' height='40' />
                   <div>
-                    <div>NSAI 0050 CPR-0449 - IS EN 13242</div>
-                    <div>NSAI 0050 CPR-0450 - IS EN 13043</div>
+                    <div>STANDARD EN 13242</div>
+                    <div>STANDARD EN 13043</div>
                   </div>
                 </div>
-                <div>Email: ballyorganquarries01@gmail.com</div>
-                <div>VAT No. IE9844373D</div>
+                <div>Email: dispatch@example.com</div>
+                <div>VAT No. IE0000000X</div>
 
                 <div className='mt-2'>
                   <div>INVOICE to CUSTOMER: {customer?.name}</div>
@@ -167,8 +167,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
 
           <div className='text-sm mt-1' style={{ lineHeight: '1.3' }}>
             For the purposes of these conditions, 'customer' means the person or
-            company ordering the goods on the reverse hereof; 'Ballyorgan
-            Quarries' means Ballyorgan Quarries Limited; 'goods' means the goods
+            company ordering the goods on the reverse hereof; 'Company' means Acme Logistics & Supply Ltd; 'goods' means the goods
             as described on the reverse hereof and the price of the goods are as
             noted on the reverse hereof excluding V.A.T.
           </div>
@@ -188,18 +187,18 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
             <ol className='list-decimal ml-6'>
               <li>
                 Subject to any special terms agreed in writing between the
-                customer and Ballyorgan Quarries, Ballyorgan Quarries may
+                customer and the Company, the Company may
                 invoice the customer for he price of the good on or tat any time
                 after delivery of the goods has taken place or is deemed to have
                 taken place.
               </li>
               <li>
                 The customer shall pay the price of the goods on delivery or
-                within 30 days of the date of Ballyorgan Quarries invoice where
-                agreed by Ballyorgan Quarries. The time of payment of the price
+                within 30 days of the date of Company invoice where
+                agreed by the Company. The time of payment of the price
                 shall be of the essence of the contract herein. If the customer
                 fails to make any payment on the due date then, without limiting
-                any other right or remedy available to Ballyorgan Quarries may:
+                any other right or remedy available to the Company may:
                 <ol
                   className='ml-6'
                   style={{ listStyleType: 'lower-alpha', lineHeight: '1.2' }}
@@ -211,8 +210,7 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
                   <li>
                     appropriate any payment made by the customer to such of the
                     goods (or the goods suppited under any other contract
-                    between the customer and Ballyorgan Quarries as Ballyorgan
-                    Quarries may think fit (notwithstanding any purported
+                    between the customer and the Company as the Company may think fit (notwithstanding any purported
                     appropriation by the customer) and
                   </li>
                   <li>
@@ -223,32 +221,32 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
                     the purpose of calculating interest); <br />
                     (ii) all legal fees and other costs incurred in the recovery
                     of overdue debts and <br />
-                    (iii) all bank charges incurred by Ballyorgan Quarries due
+                    (iii) all bank charges incurred by the Company due
                     to cheques offered in payment which are dishonoured.
                   </li>
                 </ol>
               </li>
               <li>
-                If inlays are incurred by Ballyorgan Quarries for the unloading
+                If inlays are incurred by the Company for the unloading
                 of the goods after a reasonable period of time has elapsed, then
-                Ballyorgan Quarries shall be entitled to charge €55 per hour or
+                the Company shall be entitled to charge €55 per hour or
                 pro rata for any excess time incurred for unloading.
               </li>
               <li>
                 Where the goods are to be delivered in instalments, each
                 delivery shall constitute a separate contract and failure by
-                Ballyorgan Quarries to deliver any one or more of the
+                the Company to deliver any one or more of the
                 instalments in accordance with these terms or any claim by the
                 customer in respect of any one or more instaiments shall not
                 entitle the customer to treat the contract herein as a whole as
                 repudiated.
               </li>
               <li>
-                If Ballyorgan Quarries fail to deliver the goods (or any
+                If the Company fail to deliver the goods (or any
                 instalment) for any reason other than any cause beyond
-                Ballyorgan Quarries reasonable control of the customer's fault
-                and Ballyorgan Quarries is accordingly liable to the customer,
-                Ballyorgan Quarries liability shall be limited to the excess (if
+                Company's reasonable control of the customer's fault
+                and the Company is accordingly liable to the customer,
+                Company's liability shall be limited to the excess (if
                 any) of the cost to the customer (in the cheapest available
                 market) of similar goods to replace those not delivered over the
                 price of the goods
@@ -259,33 +257,32 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
                 for placing concrete on site
               </li>
               <li>
-                No responsibility or liability shall be accepted by Ballyorgan
-                Quarries for slump or the quality of ready-mix concrete in which
+                No responsibility or liability shall be accepted by the Company for slump or the quality of ready-mix concrete in which
                 additional water or other materials have been added by the
                 customer or at his requests
               </li>
               <li>
                 Risk or damage to or loss of the goods shall become the
                 customer's responsibility in the case of goods to be delivered
-                otherwise that at Ballyorgan Quarries premises <br />
-                (i) where Ballyorgan Quarries delivers the goods using its own
+                otherwise that at Company's premises <br />
+                (i) where the Company delivers the goods using its own
                 transport to a location off hard road or <br />
                 (ii) at the time of delivery or <br />
-                (iii) where Ballyorgan Quarries uses a third party to deliver
+                (iii) where the Company uses a third party to deliver
                 the goods at the time the goods are received by the said third
                 party or <br />
                 (iv) if the customer wrongfully fails to take delivery of the
-                goods, the time when Ballyorgan Quarries has tendered delivery
+                goods, the time when the Company has tendered delivery
                 of the goods
               </li>
               <li>
                 Ownership in the goods shall not pass to the customer until
-                Ballyorgan Quarries have been paid the once of the goods and
+                the Company have been paid the once of the goods and
                 until such time as the ownership of the goods passes to the
                 customer (and provided the goods are still in existence and have
                 not been resold or used in the ordinary course of its business),
-                Ballyorgan Quarries may at any time require the customer to
-                deliver up the goods to Ballyorgan Quarries and, if the customer
+                the Company may at any time require the customer to
+                deliver up the goods to the Company and, if the customer
                 fails to do so forthwith, enter on any premises of the customer
                 or any third party where the goods are stored and repossess the
                 goods.
@@ -307,18 +304,18 @@ export const DocketPrintView = forwardRef<HTMLDivElement, DocketPrintViewProps>(
                 A claim by the customer which is based on any defect in the
                 quality or condition of the goods or their failure to correspond
                 with specification shall (whether or not delivery is refused by
-                the customer) be notified to Ballyorgan Quarries in writing
+                the customer) be notified to the Company in writing
                 within three days from the date of delivery or (where the defect
                 or failure was not apparent in reasonable time) after discovery
                 of the defect or failure. If delivery is not refused and the
-                customer does not notify Ballyorgan Quarries accordingly, the
+                customer does not notify the Company accordingly, the
                 customer shall not be entitled to reject the goods and
-                Ballyorgan Quarries shall have no liability for such defect or
+                the Company shall have no liability for such defect or
                 failure and the customer shall be bound to pay the price as if
                 the goods had been delivered in accordance with the contract.
               </li>
               <li>
-                No waiver by Ballyorgan Quarries or any breach of the contract
+                No waiver by the Company or any breach of the contract
                 by the customer shall be considered as a waiver of any
                 subsequent breach of the same or any other provision.
               </li>
